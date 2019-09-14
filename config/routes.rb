@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+  get 'session/new'
+
+  get 'session/create'
+
+  get 'session/destroy'
+
+  get 'users/new'
+
   root 'static_pages#top'
   get '/signup', to: 'users#new'
   

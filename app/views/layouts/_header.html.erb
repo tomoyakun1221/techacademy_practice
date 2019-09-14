@@ -1,3 +1,11 @@
-<header class="navbar navber-dark navbar-fixed-top" >
-  <div class="container">
+<header class="navbar navbar-fixed-top navbar-inverse" >
+  <div class= "container">
     <%= link_to "勤怠システム", root_path, id: "logo" %>
+    <nav>
+      <ul class= "navber navber-nav navbar-right" >
+        <%= link_to "トップへ", root_path, class: "logo1" %>
+        <%= link_to "ログイン", login_path, class: "logo1" %>
+      </ul>
+    </nav>
+  </div>
+</header> 
