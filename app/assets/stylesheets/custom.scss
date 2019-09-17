@@ -63,3 +63,15 @@ li {
   color: #fff;
   text-decoration: none;
 }
+
+/* デバッグ */
+
+.debug_dump {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 70px;
+  -moz-box-sizing:    border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing:         border-box;
+}
