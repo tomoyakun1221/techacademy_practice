@@ -1,3 +1,23 @@
-// Place all the styles related to the Session controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+/* ログイン画面 */
+.label-login {
+  margin-top: 10px;
+}
+
+.btn-login {
+  margin-top: 10px;
+}
+
+.checkbox-login {
+  margin-left: 20px;
+  width: auto;
+  span {
+    font-weight: normal;
+  }
+}
+
+/* ユーザー一覧画面 */
+#table-users {
+  td {
+    vertical-align: middle;
+  }
+}
