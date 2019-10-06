@@ -104,3 +104,19 @@ li {
     color: $state-danger-text;
   }
 }
+
+/* モーダルウィンドウの位置調整　*/
+.modal-dialog-center {
+  padding-top: 40px;
+}
+
+/* モーダルウィンドウ内のボタンの位置調整 */
+.label-basic-info {
+  margin-top: 5px;
+}
+
+.btn-basic-info {
+  margin: 15px 0;
+  width: 30%;
+  
+}

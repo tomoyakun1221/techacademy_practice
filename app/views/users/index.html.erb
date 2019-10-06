@@ -4,19 +4,25 @@
   <h1>ユーザ一覧</h1>
     <div class="col-md-10 col-md-offset-1">
       <%= will_paginate %>
-        <table class="table table-condensed table-hover id=table-users">
-          <thead>
-            <tr>
-              <th><%= User.human_attribute_name :name %></th>
-            </tr>
-          </thead>
-
+        <table class="table table-condensed table-hover" id="table-users">
           <% @users.each do |user| %>
             <tr>
-              <td><%= link_to user.name, user_path(user) %></td>
+              <% if current_user.admin? %>
+                <td class="pull-left"><%= link_to user.name, user_path(user) %> |</td>
+              <% else %>
+                <td class="pull-left"><%= user.name %> |</td>
+              <% end %>
+              <% if current_user.admin? && !current_user?(user) %>
+                <td class="pull-left"><%= link_to '基本情報編集', edit_basic_info_user_path(user), remote: true %> |</td>
+                <td class="pull-left"><%= link_to '削除', user_path(user), method: :delete,
+                    data: { confirm: '削除してもよろしいでしょうか？' } %></td>
+              <% end %>
             </tr>
           <% end %>
         </table>
       <%= will_paginate %>
     </div>
 </div> 
+
+<!-- モーダルウィンドウ表示 -->
+<div id="edit_basic_info" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>
