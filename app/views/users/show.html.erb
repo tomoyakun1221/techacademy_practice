@@ -1,19 +1,52 @@
 <% provide(:title, @user.name) %>
 <div>
-  <table class="table table-condensed table-bordered user-table">
-    <tr>
-      <td>時間管理表</td>
-      <td>指定勤務時間&ensp;&ensp;&ensp;<%= format_basic_info(@user.work_time) %></td>
-      <td>基本時間&ensp;&ensp;&ensp;<%= format_basic_info(@user.basic_time) %></td>
-      <td>初日</td>
+  <table class="table table-bordered table-condensed user-table">
+    <tr valign="middle">
+      <td>
+          <%= link_to "←", user_path(date: @first_day.prev_month), class: "radius", :style=>"color:gray;" %></div>
+          &nbsp;&nbsp;&nbsp;<%= l(@first_day, format: :middle) %>&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;
+          <%= link_to "→", user_path(date: @first_day.next_month), class: "radius", :style=>"color:gray;" %></td>
+      <td>指定勤務時間&nbsp;&nbsp;&nbsp;<%= format_basic_info(@user.work_time) %></td>
+      <td><%= format_basic_info(@user.basic_time) %>&nbsp;&nbsp;&nbsp;基本時間</td>
+      <td>初日&nbsp;&nbsp;&nbsp;<%= l(@first_day, format: :short) %></td>
     </tr>
+
     <tr>
-      <td>所属&ensp;&ensp;&ensp;<%= @user.department.nil? ? "未所属" : @user.department %></td>
-      <td>氏名&ensp;&ensp;&ensp;<%= @user.name %></td>
-      <td>コード</td>
-      <td></td>
+      <td>所属&nbsp;&nbsp;&nbsp;<%= @user.department.present? ? @user.department : "未所属" %></td>
+      <td>氏名&nbsp;&nbsp;&nbsp;<%= @user.name %></td>
+      <td>コード</td><td></td>
       <td>出勤日数</td>
-      <td>締め</td>
+      <td>締め&nbsp;&nbsp;&nbsp;<%= l(@last_day, format: :short) %></td>
     </tr>
+  </table>
+</div>
+
+<div>
+  <table class="table table-bordered table-condensed table-hover" id="table-attendances">
+    <thead>
+      <tr>
+        <th>日付</th>
+        <th>曜日</th>
+        <th>勤怠登録</th>
+        <th>出勤時間</th>
+        <th>退勤時間</th>
+        <th>在社時間</th>
+        <th>備考</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @attendances.each do |day| %>
+        <tr>
+          <td><%= l(day.worked_on, format: :short) %></td>
+          <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      <% end %>
+    </tbody>
   </table>
 </div>
