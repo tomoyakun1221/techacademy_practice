@@ -3,8 +3,8 @@ class Attendance < ApplicationRecord
   
   validates :worked_on, presence: true
   validates :note, length: { maximum: 50 }
-
-  # 出勤時間が存在しない場合、退勤時間は無効
+  
+  # 出勤時間がなく、退勤時間がない場合、無効にする
   validate :finished_at_is_invalid_without_a_started_at
   
   # 出勤時間が退勤時間よりも遅い場合、無効にする

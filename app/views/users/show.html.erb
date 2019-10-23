@@ -1,3 +1,4 @@
+
 <% provide(:title, @user.name) %>
 <div>
   <table class="table table-bordered table-condensed user-table">
@@ -24,7 +25,7 @@
 
 <div>
   <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), 
-      class: "btn btn-md btn-default" %>
+      class: "btn btn-md btn-primary" %>
 </div>
 
 <div>
@@ -52,26 +53,34 @@
       <% @attendances.each do |day| %>
         <tr>
           <td><%= l(day.worked_on, format: :short) %></td>
-          <td><%= $days_of_the_week[day.worked_on.wday] %></td>
+          <td>
+            <% if day.worked_on.wday == 6 %>
+              <font color="Blue"><%= $days_of_the_week[day.worked_on.wday] %></font>
+            <% elsif day.worked_on.wday == 0  %>
+              <font color="Red"><%= $days_of_the_week[day.worked_on.wday] %></font>
+            <% else %>
+              <%= $days_of_the_week[day.worked_on.wday] %>
+            <% end %>
+          </td>
           <td><%= l(day.started_at, format: :time_h) if day.started_at.present? %></td>
-          <td><%= l(day.started_at, format: :time_m) if day.started_at.present? %></td>
+          <td><%= l(day.started_at.ceil_to(15.minutes), format: :time_m) if day.started_at.present? %></td>
           <td>
             <% if Date.current == day.worked_on && day.started_at.nil? %>
               <%= link_to "出社", user_attendance_path(@user, day), method: :patch, 
-                  class: "btn btn-md btn-default btn-attendance" %>
+                  class: "btn btn-md btn-primary btn-attendance" %>
             <% end %>
           </td>
           <td><%= l(day.finished_at, format: :time_h) if day.finished_at.present? %></td>
-          <td><%= l(day.finished_at, format: :time_m) if day.finished_at.present? %></td>
+          <td><%= l(day.finished_at.floor_to(15.minutes), format: :time_m) if day.finished_at.present? %></td>
           <td>
             <% if Date.current == day.worked_on && day.started_at.present? && day.finished_at.blank? %>
               <%= link_to "退社", user_attendance_path(@user, day), method: :patch, 
-                  class: "btn btn-md btn-default btn-attendance" %>
+                  class: "btn btn-md btn-primary btn-attendance" %>
             <% end %>
           </td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-              <%= day_work_time = worked_time(day.started_at, day.finished_at) %>
+              <%= day_work_time = worked_time(day.started_at.ceil_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
               <% @total_time = format("%.2f", @total_time.to_f + day_work_time.to_f)%>
             <% end %>
           </td>
@@ -82,7 +91,13 @@
     
     <tfoot>
       <tr>
-        <td colspan="2"></td>
+        <th colspan="2">累計日数</th>
+        <th colspan="6">総合勤務時間</th>
+        <th>累計在社時間</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td colspan="2"><%= @worked_sum %></td>
         <td colspan="6"><%= format_basic_info(@user.basic_time).to_f * @worked_sum %></td>
         <td><%= @total_time %></td>
         <td></td>

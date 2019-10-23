@@ -1,4 +1,6 @@
 class AttendancesController < ApplicationController
+  include AttendancesHelper
+  
   before_action :set_user, only: [:edit_one_month, :update_one_month]
   before_action :logged_in_user, only: [:update, :edit_one_month]
   before_action :admin_or_correct_user,  only: [:update, :edit_one_month, :update_one_month]
@@ -32,13 +34,18 @@ class AttendancesController < ApplicationController
   def update_one_month
     ActiveRecord::Base.transaction do # トランザクションを開始します。
       #繰り返し処理により、勤怠編集処理を実施する
-      attendances_params.each do |id, item|
-        attendance = Attendance.find(id)
-        attendance.update_attributes!(item)
+      if attendances_invalid?
+        attendances_params.each do |id, item|
+          attendance = Attendance.find(id)
+          attendance.update_attributes!(item)
+        end
+        flash[:success] = "1ヶ月分の勤怠編集更新に成功しました"
+        redirect_to user_url(@user)
+      else
+        flash[:danger] = "不正な時間入力がありました、再入力してください。"
+        redirect_to attendances_edit_one_month_user_url(@user, params[:date])
       end
     end
-    flash[:success] = "1ヶ月分の勤怠編集更新に成功しました"
-    redirect_to user_url(@user)
   rescue ActiveRecord::RecordInvalid # トランザクションによるエラーの分岐です。
     flash[:danger] = "無効なデータを入力しました。再度編集をお願いします。"
     redirect_to attendances_edit_one_month_user_url(@user)
@@ -53,9 +60,9 @@ class AttendancesController < ApplicationController
   
   # 管理権限者、または現在ログインしているユーザーを許可します。
   def admin_or_correct_user
-    @user = User.find(params[:id]) 
+    @user = User.find(params[:user_id]) if @user.blank? 
     unless current_user.admin? || current_user?(@user)
-      flash[:danger] = "編集権限がありません"
+      flash[:danger] = "編集・操作権限がありません"
       redirect_to root_url
     end
   end
