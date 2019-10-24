@@ -63,7 +63,7 @@
             <% end %>
           </td>
           <td><%= l(day.started_at, format: :time_h) if day.started_at.present? %></td>
-          <td><%= l(day.started_at.ceil_to(15.minutes), format: :time_m) if day.started_at.present? %></td>
+          <td><%= l(day.started_at.floor_to(15.minutes), format: :time_m) if day.started_at.present? %></td>
           <td>
             <% if Date.current == day.worked_on && day.started_at.nil? %>
               <%= link_to "出社", user_attendance_path(@user, day), method: :patch, 
@@ -80,7 +80,7 @@
           </td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-              <%= day_work_time = worked_time(day.started_at.ceil_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+              <%= day_work_time = worked_time(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
               <% @total_time = format("%.2f", @total_time.to_f + day_work_time.to_f)%>
             <% end %>
           </td>
