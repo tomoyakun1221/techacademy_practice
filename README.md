@@ -24,3 +24,4 @@ Things you may want to cover:
 * ...
 # attedance_system_B
 # -A
+# attedance_system_A
