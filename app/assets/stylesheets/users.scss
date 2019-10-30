@@ -18,6 +18,14 @@
   }
 }
 
+.align-top{
+  vertical-align: top;
+}
+
+.align-middle{
+  vertical-align: middle;
+}
+
 .btn-attendance {
   width: 100%;
 }
@@ -46,6 +54,11 @@
   td {
     vertical-align: middle;
   }  
+}
+
+.btn-width {
+  margin-top: 10px;
+  width: 291px;
 }
 
 /* 基本情報編集モーダルウインドウ */

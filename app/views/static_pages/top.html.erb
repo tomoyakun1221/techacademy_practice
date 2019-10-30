@@ -3,7 +3,11 @@
 <div class="center jumbotron">
 <h1>勤怠システム</h1>
 
-<%= link_to "ログイン", login_path, class: "btn btn-lg btn-primary btn-signup" %>
+<% if logged_in? %>
+  <%= link_to "ログイン", login_path, class: "btn btn-lg btn-primary btn-signup disabled" %>
+<% else %>
+  <%= link_to "ログイン", login_path, class: "btn btn-lg btn-primary btn-signup" %>
+<% end %>
 
 <p>ユーザー情報がまだの場合は<%= link_to "こちら", signup_path %></p>
 

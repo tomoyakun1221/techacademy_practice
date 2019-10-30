@@ -1,39 +1,65 @@
 <% provide(:title, "ユーザ一覧") %>
 
 <div class="container">
-  <% if params[:name].present? %>
-    <h1>検索結果</h1>
-  <% else %>
-    <h1>全てのユーザー</h1>
-  <% end %>
-    <div class="col-md-3 col-md-offset-8">
-      <%= form_with(model: @user, method: :get, local: true) do |f| %>
-        <%= f.label :search, "ユーザー名検索" %>
-        <div style="display: inline-flex">
-          <%= f.text_field :name, class: "form-control", placeholder: "キーワードを入力" %>
-          <%= f.submit "検索", class: "btn btn-md btn-primary" %>
-        </div>
+    <h1>ユーザ一覧</h1>
+    <div class="col-md-10 col-md-offset-1">
+      <%= form_tag import_users_path, method: :post, multipart: true do %>
+        <%= file_field_tag :file, class: "btn btn-default" %>
+        <%= submit_tag "CSVをインポート", class: "btn btn-md btn-primary btn-width" %>
       <% end %>
     </div>
 
     <div class="col-md-10 col-md-offset-1">
       <%= will_paginate %>
-        <table class="table table-condensed table-hover" id="table-users">
+        <ul>
           <% @users.each do |user| %>
-            <tr>
-              <% if current_user.admin? %>
-                <td class="pull-left"><%= link_to user.name, user_path(user) %> |</td>
-              <% else %>
-                <td class="pull-left"><%= user.name %> |</td>
-              <% end %>
-              <% if current_user.admin? && !current_user?(user) %>
-                <td class="pull-left"><%= link_to '基本情報編集', edit_basic_info_user_path(user), remote: true %> |</td>
-                <td class="pull-left"><%= link_to '削除', user_path(user), method: :delete,
-                    data: { confirm: '削除してもよろしいでしょうか？' } %></td>
-              <% end %>
-            </tr>
+            <li><%= user.name %></li>
+            <li><span>| </span><%= link_to '削除', user, method: :delete,
+                  data: { confirm: '削除してもよろしいでしょうか？' }, class: "btn btn-primary" %>
+            </li>
+            <li>
+            <!-- アコーディオン -->
+              <div class="panel panel-default">
+                <a href="#collapse<%= user.id %>" data-toggle="collapse" class="btn btn-primary btn-lg collapsed">編集</a>
+              </div>
+              <div style="padding: 10px; margin-bottom: 10px; border: 0.5px solid #c0c0c0; border-radius: 5px;" id="collapse<%= user.id %>" class="collapse">
+                <%= form_with(model: user, local: true, method: :patch) do |f| %>
+                  <%= f.label :name %>
+                  <%= f.text_field :name, class: "form-control" %>
+                
+                  <%= f.label :email %>
+                  <%= f.email_field :email, class: "form-control" %>
+                    
+                  <%= f.label :department %>
+                  <%= f.text_field :department, class: "form-control" %>
+                
+                  <%= f.label :employee_number %>
+                  <%= f.number_field :employee_number, class: "form-control" %>
+                
+                  <%= f.label :user_cardid %>
+                  <%= f.text_field :user_card_id, class: "form-control" %>
+                  
+                  <%= f.label :password %>
+                  <%= f.password_field :password, class: "form-control" %>
+                  
+                  <%= f.label :password_confirmation %>
+                  <%= f.password_field :password_confirmation, class: "form-control" %>
+                  
+                  <%= f.label :basic_time %>
+                  <%= f.time_field :basic_time, class: "form-control" %>
+                  
+                  <%= f.label :user_designated_work_start_time %>
+                  <%= f.time_field :user_designated_work_start_time, class: "form-control" %>
+                  
+                  <%= f.label :user_designated_work_end_time %>
+                  <%= f.time_field :user_designated_work_end_time, class: "form-control" %>
+                  <br>
+                  <%= f.submit "編集する", class: "btn btn-primary btn-block" %>
+                <% end %>
+              </div>
+            </li>
           <% end %>
-        </table>
+        </ul>
       <%= will_paginate %>
     </div>
 </div> 
