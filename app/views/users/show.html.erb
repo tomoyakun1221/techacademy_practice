@@ -2,12 +2,21 @@
 <div>
   <table class="table table-bordered table-condensed user-table">
     <tr>
+<<<<<<< HEAD
       <td>
         <br><%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-sm btn-primary" %>
         <span class="align-middle">&nbsp;&nbsp;&nbsp;<%= l(@first_day, format: :middle) %>&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
         <span class="align-top"><%= link_to "→", user_path(date: @first_day.next_month), class: "btn btn-sm btn-primary" %></span>
       </td>
       <td><br>
+=======
+      <td>
+        <br><%= link_to "←", user_path(date: @first_day.prev_month), class: "btn btn-sm btn-primary" %></span>
+        <span class="align-middle">&nbsp;&nbsp;&nbsp;<%= l(@first_day, format: :middle) %>&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
+        <span class="align-top"><%= link_to "→", user_path(date: @first_day.next_month), class: "btn btn-sm btn-primary" %></span>
+      </td>
+      <td>
+>>>>>>> 2bd5adf2fe1132420affc68ac87363a2b8f9e962
         指定勤務開始時間&nbsp;&nbsp;&nbsp;<%= format_basic_info(@user.user_designated_work_start_time) %><br>
         指定勤務終了時間&nbsp;&nbsp;&nbsp;<%= format_basic_info(@user.user_designated_work_end_time) %>
       </td>
@@ -26,6 +35,7 @@
   </table>
 </div>
 
+<<<<<<< HEAD
 <% if %>
   <h4 class="red_warning"></h4>
 <% else %>
@@ -52,6 +62,23 @@
 
 <div>
   <%= link_to "勤怠修正ログ", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-md btn-primary" %>
+=======
+<h4>【所属長承認申請のお知らせ】</h4>
+<h4>【勤怠変更申請のお知らせ】</h4>
+<h4>【残業申請のお知らせ】</h4>
+
+<div style="display: inline-flex">
+  <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), 
+      class: "btn btn-md btn-primary" %>
+
+  <%= link_to "CSV出力", attendances_edit_one_month_user_path(date: @first_day), 
+      class: "btn btn-md btn-primary" %>
+</div>
+
+<div>
+  <%= link_to "勤怠修正ログ(承認済)", attendances_edit_one_month_user_path(date: @first_day), 
+      class: "btn btn-md btn-primary" %>
+>>>>>>> 2bd5adf2fe1132420affc68ac87363a2b8f9e962
 </div>
 
 <div>
@@ -144,7 +171,19 @@
         <th colspan="5"></th>
         <td rowspan = "2">
           <div class="btn-group">
+<<<<<<< HEAD
             所属長承認
+=======
+            <label rowspan="2">所属長承認 未</label>
+            <select class="form-control">
+              <option></option>
+              <option></option>
+              <option></option>
+              <option></option>
+            </select>
+            <%= link_to "申請", attendances_edit_one_month_user_path(date: @first_day), 
+                class: "btn btn-block btn-primary" %>
+>>>>>>> 2bd5adf2fe1132420affc68ac87363a2b8f9e962
           </div>
         </td>
       </tr>

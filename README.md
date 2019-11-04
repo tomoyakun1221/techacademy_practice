@@ -23,4 +23,9 @@ Things you may want to cover:
 
 * ...
 # attedance_system_B
+<<<<<<< HEAD
+=======
+# -A
+>>>>>>> 2bd5adf2fe1132420affc68ac87363a2b8f9e962
+# attedance_system_A
 # attedance_system_A

@@ -72,6 +72,31 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
+<<<<<<< HEAD
+=======
+  def edit_basic_info
+  end
+
+  def update_basic_info
+    if @user.update_attributes(basic_info_params)
+      flash[:success] = "#{@user.name}の基本情報を更新しました。"
+    else
+      flash[:danger] = "#{@user.name}の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
+    end
+    redirect_to users_url
+  end
+  
+  def import
+    if params[:file].blank?
+      flash[:danger] = "読み込むCSVファイルを選択してください"
+      redirect_to users_url
+    elsif File.extname(params[:file].original_filename) != ".csv"
+      flash[:danger] = "csvファイルのみ読み込み可能です"
+      redirect_to users_url
+    end
+  end
+
+>>>>>>> 2bd5adf2fe1132420affc68ac87363a2b8f9e962
   private
     def user_params
       params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
