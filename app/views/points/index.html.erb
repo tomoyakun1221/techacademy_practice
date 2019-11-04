@@ -1,0 +1,35 @@
+<% provide(:title, "拠点一覧") %>
+
+<div class="container">
+  <h1>拠点一覧</h1>
+    <div class="col-md-10 col-md-offset-1">
+      <table class="table table-bordered table-condensed table-striped">
+        <thead>
+          <tr>
+            <th></th>
+            <th></th>
+            <th class="center">拠点番号</th>
+            <th class="center">拠点名</th>
+            <th class="center">拠点種類</th>
+          </tr> 
+        </thead>
+    　　  <tbody>
+    　　  　<!-- 繰り返し処理の中で@pointsでそれぞれの値を取らないと、どの情報取るねんとなってしまう -->
+    　　　　  <% @points.each do |point| %>
+    　　  　　  <tr>
+    　　        <td align="center"><%= link_to '編集', edit_point_info_point_path(point), remote: true, class: 'btn btn-primary btn-md' %></td>
+    　　        <td align="center"><%= link_to '削除', point_path(point), method: :delete, data: { confirm: '削除してもよろしいでしょうか？'}, class: 'btn btn-primary btn-md' %></td>
+    　         <td align="center"><%= point.point_number %></td>
+   　          <td align="center"><%= point.point_name %></td>
+  　　          <td align="center"><%= point.point_type %></td>
+    　　  　   </tr>
+    　　    <% end %>
+        </tbody>
+      </table>
+      <%= link_to '拠点情報追加', new_point_path, remote: true, class: 'btn btn-primary btn-md' %></td>
+    </div>
+</div>
+
+<!-- モーダルウィンドウ表示 -->
+<div id="edit_point_info" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>
+<div id="new" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>

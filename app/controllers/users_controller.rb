@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include UsersHelper
+  
   before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month]
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month]
   before_action :correct_user, only: [:edit, :update]
@@ -15,6 +17,26 @@ class UsersController < ApplicationController
 
   def show
     @worked_sum = @attendances.where.not(started_at: nil, finished_at: nil).count
+    
+    respond_to do |format|
+      format.all
+      format.csv do |csv|
+        send_posts_csv(@attendances)
+      end
+    end
+  end
+  
+  def send_posts_csv(attendances)
+    csv_data = CSV.generate do |csv|
+      header = %w(日付 出社時間 退社時間 備考)
+      csv << header
+
+      attendances.each do |day|
+        values = [l(day.worked_on, format: :short), day.started_at, day.finished_at, day.note]
+        csv << values
+      end
+    end
+    send_data(csv_data, filename: "勤怠情報.csv")
   end
 
   def new
@@ -50,25 +72,13 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
-  def edit_basic_info
-  end
-
-  def update_basic_info
-    if @user.update_attributes(basic_info_params)
-      flash[:success] = "#{@user.name}の基本情報を更新しました。"
-    else
-      flash[:danger] = "#{@user.name}の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
-    end
-    redirect_to users_url
-  end
-
   private
     def user_params
       params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
     end
 
     def basic_info_params
-      params.require(:user).permit(:department, :basic_time, :work_time)
+      params.require(:user).permit(:name, :email, :department, :employee_number, :user_card_id, :basic_time, :work_time, :user_designated_work_start_time, :user_designated_work_end_time)
     end
     
     # 管理権限者、または現在ログインしているユーザーを許可します。

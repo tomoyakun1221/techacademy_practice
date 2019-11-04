@@ -61,4 +61,12 @@ class ApplicationController < ActionController::Base
       redirect_to root_url
     end
   end
+  
+  #文字化け防止
+  def send_file_headers!(options)
+    super(options)
+    match = /(.+); filename="(.+)"/.match(headers['Content-Disposition'])
+    encoded = URI.encode_www_form_component(match[2])
+    headers['Content-Disposition'] = "#{match[1]}; filename*=UTF-8''#{encoded}" unless encoded == match[2]
+  end
 end

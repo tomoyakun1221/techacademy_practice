@@ -1,0 +1,35 @@
+<%= form_with(model: user, url: update_basic_info_user_path(user), local: true, method: :patch) do |f| %>
+  <%= render 'shared/error_messages', object: user %>
+
+  <%= f.label :name %>
+  <%= f.text_field :name, class: "form-control" %>
+
+  <%= f.label :email %>
+  <%= f.email_field :email, class: "form-control" %>
+    
+  <%= f.label :department %>
+  <%= f.text_field :department, class: "form-control" %>
+
+  <%= f.label :employee_number %>
+  <%= f.number_field :employee_number, class: "form-control" %>
+
+  <%= f.label :user_cardid %>
+  <%= f.text_field :user_card_id, class: "form-control" %>
+  
+  <%= f.label :password %>
+  <%= f.password_field :password, class: "form-control" %>
+  
+  <%= f.label :password_confirmation %>
+  <%= f.password_field :password_confirmation, class: "form-control" %>
+
+  <%= f.label :basic_time %>
+  <%= f.time_field :basic_time, class: "form-control" %>
+  
+  <%= f.label :user_designated_work_start_time %>
+  <%= f.time_field :user_designated_work_start_time, class: "form-control" %>
+  
+  <%= f.label :user_designated_work_end_time %>
+  <%= f.time_field :user_designated_work_end_time, class: "form-control" %>
+  <br>
+  <%= f.submit yield(:button_text), class: "btn btn-primary btn-block" %>
+<% end %>

@@ -1,0 +1,25 @@
+<% provide(:title, "出勤中社員一覧") %>
+
+<div class="container">
+  <h1>出勤中社員一覧</h1>
+    <div class="col-md-10 col-md-offset-1">
+      <table class="table table-bordered table-condensed table-striped">
+        <thead>
+          <tr>
+            <th class="center">社員番号</th>
+            <th class="center">名前</th>
+          </tr> 
+        </thead>
+        <% @attendances.each do |day| %>
+          <% if day.started_at.present? && day.finished_at.blank? %>
+            <tbody>
+              <tr>
+                <td align="center"><%= day.user.employee_number %></td>
+                <td align="center"><%= day.user.name %></td>
+              </tr>
+            </tbody>
+          <% end %>
+        <% end %>
+      </table>
+    </div>
+</div>
