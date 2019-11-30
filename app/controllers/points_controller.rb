@@ -1,6 +1,6 @@
 class PointsController < ApplicationController
   
-  before_action :set_point, only: [ :edit_point_info, :update_point_info, :destroy ]
+  before_action :set_point, only: [:edit_point_info, :update_point_info, :destroy ]
   
   def new
     @point = Point.new

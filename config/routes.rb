@@ -19,13 +19,20 @@ Rails.application.routes.draw do
       patch 'update_basic_info'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
+      get 'one_month_application_info'
+      post 'overtime_application_info'
     end
     collection { post :import }
-<<<<<<< HEAD
     collection { get :working_employee_list }
     collection { get :basic_info_edit }
-=======
->>>>>>> 2bd5adf2fe1132420affc68ac87363a2b8f9e962
-    resources :attendances, only: :update
+    resources :attendances, only: :update do
+    end
   end
+    
+    resources :attendances, only: :update do
+      member do
+        patch 'one_month_application'
+        patch 'overtime_application'
+     end
+    end
 end

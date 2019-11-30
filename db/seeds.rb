@@ -27,15 +27,10 @@ User.create!(name: "上長B",
 
 100.times do |n|
   name = Faker::Name.name
-  email = "sample-#{n+1}@email.com"
+  email = "sample-#{n+4}@email.com"
   password = "password"
-<<<<<<< HEAD
   employee_number = n+4
   user_card_id = n+4
-=======
-  employee_number = n+1
-  user_card_id = n+1
->>>>>>> 2bd5adf2fe1132420affc68ac87363a2b8f9e962
   User.create!(name: name,
               email: email,
               employee_number: employee_number,

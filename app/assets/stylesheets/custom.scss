@@ -92,6 +92,22 @@ li {
   margin-top: 10px;
 }
 
+/* １ヶ月の勤怠申請画面 */
+.notification {
+  display: inline;
+  color: red;
+  font-weight: bold;
+  border: 3px solid red;
+}
+
+.notice {
+  color: red;
+}
+
+.btn-application-info {
+  margin-top: 10px;
+}
+
 /* デバッグ */
 
 .debug_dump {

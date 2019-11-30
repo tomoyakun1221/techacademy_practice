@@ -1,0 +1,53 @@
+<!-- 残業申請フォーム -->
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">✖︎</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <h3 class="modal-title text-center">【残業申請】</h3>
+      <%= form_with model: @attendance, url: overtime_application_attendance_path(@atttendance), local: true, method: :patch do |f| %>
+        <table class="txt1 table table-bordered table-striped table-condensed">
+          <thead>
+            <tr>
+              <th class="text-center">日付</th>
+              <th class="text-center">曜日</th>
+              <th class="text-center">終了予定時間</th>
+              <th class="text-center">翌日</th>
+              <th class="text-center">業務処理内容</th>
+              <th class="text-center">指示者確認印</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <!-- 日付 -->
+              <td class="text-center"><%= l(@attendance.worked_on, format: :short) %></td>
+              <!-- 曜日 -->
+              <td class="text-center">
+                <% if @attendance.worked_on.wday == 6 %>
+                  <font color="Blue"><%= $days_of_the_week[@attendance.worked_on.wday] %></font>
+                <% elsif @attendance.worked_on.wday == 0  %>
+                  <font color="Red"><%= $days_of_the_week[@attendance.worked_on.wday] %></font>
+                <% else %>
+                  <%= $days_of_the_week[@attendance.worked_on.wday] %>
+                <% end %>
+              </td>
+              <!-- 終了予定時間 -->
+              <td class="text-center"><%= f.time_field :endplans_time, class: 'form-control', required: true %></td>
+              <!-- 翌日 -->
+              <td class="text-center"><%= f.check_box :over_next_day, {}, checked_value = "true", unchecked_value = "false" %></td>
+              <!-- 業務処理内容 -->
+              <td class="text-center"><%= f.text_field :business_outline, class: 'form-controll' %></td>
+              <!-- 指示者確認印 -->
+              <td class="text-center"><%= f.select :decision, {なし: 'なし', 申請中: '申請中', 承認: '承認', 否認: '否認'}, class: 'form-control' %></td>
+            </tr>
+          </tbody>
+        </table>
+        <%= f.submit "残業を申請する", class: "btn btn-block btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+</div>  

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   $days_of_the_week = %w{日 月 火 水 木 金 土}
 
   # ページ出力前に1ヶ月分のデータの存在を確認・セットします。
-  def set_one_month 
+  def set_one_month
     @first_day = params[:date].nil? ?
                  Date.current.beginning_of_month : params[:date].to_date
     @last_day = @first_day.end_of_month
@@ -52,7 +52,7 @@ class ApplicationController < ActionController::Base
   def admin_user
     redirect_to root_url unless current_user.admin?
   end
-  
+
   # 管理権限者、または現在ログインしているユーザーを許可します。
   def admin_or_correct_user
     @user = User.find(params[:id]) 
@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
       redirect_to root_url
     end
   end
-  
+
   #文字化け防止
   def send_file_headers!(options)
     super(options)

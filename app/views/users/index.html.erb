@@ -24,9 +24,6 @@
                 <a href="#collapse<%= user.id %>" data-toggle="collapse" class="btn btn-primary btn-lg collapsed">編集</a>
               </div>
               <div style="padding: 10px; margin-bottom: 10px; border: 0.5px solid #c0c0c0; border-radius: 5px;" id="collapse<%= user.id %>" class="collapse">
-<<<<<<< HEAD
-                <%= render "user", { user: user } %>
-=======
                 <%= form_with(model: user, local: true, method: :patch) do |f| %>
                   <%= f.label :name %>
                   <%= f.text_field :name, class: "form-control" %>
@@ -60,7 +57,6 @@
                   <br>
                   <%= f.submit "編集する", class: "btn btn-primary btn-block" %>
                 <% end %>
->>>>>>> 2bd5adf2fe1132420affc68ac87363a2b8f9e962
               </div>
             </li>
           <% end %>

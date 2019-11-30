@@ -18,4 +18,19 @@ module AttendancesHelper
     end
     return attendances
   end
+  
+   # 所属長承認の表示
+  def current_month_status(day)
+    @attendance = @user.attendances.find_by(worked_on: day)
+    name = User.superior_user_except_myself(session).map { |name| name[:name] }
+    if name.index(@attendance.month_order_superior_id)
+      "#{@attendance.month_order_superior_id}に申請中"
+    elsif @attendance.decision == 2
+      "#{@attendance.month_order_superior_id}から承認済"
+    elsif @attendance.decision == 3
+      "#{@attendance.month_order_superior_id}から否認"
+    else
+      "未"
+    end
+  end
 end

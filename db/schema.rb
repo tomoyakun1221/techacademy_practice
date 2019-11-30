@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 20191104133033) do
-=======
-ActiveRecord::Schema.define(version: 20191030164441) do
->>>>>>> 2bd5adf2fe1132420affc68ac87363a2b8f9e962
+ActiveRecord::Schema.define(version: 20191124065152) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -24,6 +20,17 @@ ActiveRecord::Schema.define(version: 20191030164441) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "month_order_superior_status"
+    t.string "month_order_superior_id"
+    t.boolean "agreement"
+    t.string "month_order_status"
+    t.string "month_order_id"
+    t.integer "decision"
+    t.string "overtime_order_id"
+    t.string "overtime_order_status"
+    t.boolean "over_next_day"
+    t.datetime "endplans_time"
+    t.string "business_outline"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -44,23 +51,13 @@ ActiveRecord::Schema.define(version: 20191030164441) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "department"
-<<<<<<< HEAD
-    t.datetime "basic_time", default: "2019-11-03 23:00:00"
-    t.datetime "work_time", default: "2019-11-03 22:30:00"
+    t.datetime "basic_time", default: "2019-11-22 23:00:00"
+    t.datetime "work_time", default: "2019-11-22 22:30:00"
     t.integer "employee_number"
-    t.datetime "user_designated_work_start_time", default: "2019-11-04 00:00:00"
-    t.datetime "user_designated_work_end_time", default: "2019-11-04 09:00:00"
+    t.datetime "user_designated_work_start_time", default: "2019-11-23 00:00:00"
+    t.datetime "user_designated_work_end_time", default: "2019-11-23 09:00:00"
     t.string "user_card_id"
-    t.integer "decision"
     t.boolean "superior", default: false
-=======
-    t.datetime "basic_time", default: "2019-10-30 23:00:00"
-    t.datetime "work_time", default: "2019-10-30 22:30:00"
-    t.integer "employee_number"
-    t.datetime "user_designated_work_start_time", default: "2019-10-31 00:00:00"
-    t.datetime "user_designated_work_end_time", default: "2019-10-31 09:00:00"
-    t.integer "user_card_id"
->>>>>>> 2bd5adf2fe1132420affc68ac87363a2b8f9e962
   end
 
 end
