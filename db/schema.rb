@@ -51,12 +51,13 @@ ActiveRecord::Schema.define(version: 20191124065152) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "department"
-    t.datetime "basic_time", default: "2019-11-22 23:00:00"
-    t.datetime "work_time", default: "2019-11-22 22:30:00"
+    t.datetime "basic_time", default: "2019-11-29 23:00:00"
+    t.datetime "work_time", default: "2019-11-29 22:30:00"
     t.integer "employee_number"
-    t.datetime "user_designated_work_start_time", default: "2019-11-23 00:00:00"
-    t.datetime "user_designated_work_end_time", default: "2019-11-23 09:00:00"
+    t.datetime "user_designated_work_start_time", default: "2019-11-30 00:00:00"
+    t.datetime "user_designated_work_end_time", default: "2019-11-30 09:00:00"
     t.string "user_card_id"
+    t.integer "decision"
     t.boolean "superior", default: false
   end
 

@@ -8,8 +8,9 @@
     </div>
     <div class="modal-body">
       <h3 class="modal-title text-center">【残業申請】</h3>
-      <%= form_with model: @attendance, url: overtime_application_attendance_path(@atttendance), local: true, method: :patch do |f| %>
-        <table class="txt1 table table-bordered table-striped table-condensed">
+      <!-- urlをcurrent_userで渡さないと、現在ログイン中のユーザーで残業申請できなくなる -->
+      <%= form_with model: @attendance, url: attendances_overtime_application_user_path(current_user), local: true, method: :patch do |f| %>
+        <table class="table table-bordered table-striped table-condensed">
           <thead>
             <tr>
               <th class="text-center">日付</th>
@@ -24,7 +25,9 @@
           <tbody>
             <tr>
               <!-- 日付 -->
-              <td class="text-center"><%= l(@attendance.worked_on, format: :short) %></td>
+              <!--hidden_fieldで日付を持たせて、コントローラーで使わないと、月初の情報を -->
+              <td class="text-center"><%= l(@attendance.worked_on, format: :short) %>
+                                      <%= f.hidden_field :day, :value => @attendance.worked_on %></td>
               <!-- 曜日 -->
               <td class="text-center">
                 <% if @attendance.worked_on.wday == 6 %>
@@ -36,13 +39,15 @@
                 <% end %>
               </td>
               <!-- 終了予定時間 -->
-              <td class="text-center"><%= f.time_field :endplans_time, class: 'form-control', required: true %></td>
+              <td class="text-center"><%= f.time_field :endplans_time, class: 'form-control' %>
+                                      <%= f.hidden_field :hidden_endplans_time, :value => :endplans_time %></td>
+              
               <!-- 翌日 -->
               <td class="text-center"><%= f.check_box :over_next_day, {}, checked_value = "true", unchecked_value = "false" %></td>
               <!-- 業務処理内容 -->
-              <td class="text-center"><%= f.text_field :business_outline, class: 'form-controll' %></td>
+              <td class="text-center"><%= f.text_field :business_outline, class: 'form-control' %></td>
               <!-- 指示者確認印 -->
-              <td class="text-center"><%= f.select :decision, {なし: 'なし', 申請中: '申請中', 承認: '承認', 否認: '否認'}, class: 'form-control' %></td>
+              <td class="text-center"><%= f.collection_select :month_order_superior_id, User.superior_user_except_myself(session), :name, :name, {prompt: "選択してください"}, :include_blank => true %></td>
             </tr>
           </tbody>
         </table>

@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
   include UsersHelper
   
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :send_posts_csv, :current_month_status, :one_month_application_info, :overtime_application_info]
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :send_posts_csv, :current_month_status, :one_month_application_info, :one_month_application]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :one_month_application]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info, :edit_one_month]
   before_action :set_one_month, only: :show
@@ -100,14 +100,27 @@ class UsersController < ApplicationController
     @title_name = Attendance.joins(:user).where(month_order_id: current_user.name)
   end
   
-  #残業申請
-  def overtime_application_info
-    @attendance = Attendance.find(params[:id])
+  #１ヶ月分の勤怠申請更新
+  def one_month_application
+    day = params[:date]
+    @attendance = @user.attendances.find_by(worked_on: day)
+    unless params[:attendance][:month_order_superior_id].empty?
+      @attendance.update_attributes(update_one_month_application_params)
+      flash[:success] = "１ヶ月分の勤怠を申請をしました。#{@attendance.month_order_superior_id}の承認をお待ち下さい。"
+    else
+      flash[:danger] = "所属長を選択してください。"
+    end
+    redirect_to @user
   end
 
   private
     def user_params
       params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
+    end
+    
+    #1ヶ月分の勤怠申請の通知をします
+    def update_one_month_application_params
+      params.require(:attendance).permit(:month_order_superior_id)
     end
 
     def basic_info_params

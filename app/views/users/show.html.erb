@@ -98,7 +98,7 @@
         <tr>
           <td>
             <!-- attendances_overtime_application_info_user_pathにdayを渡さないと、１ヶ月分の情報を残業申請情報に渡すことができない。@userで指定しないとどのユーザーの申請かわからない -->
-            <%= link_to "残業申請", overtime_application_info_user_path(day), remote: true, method: :post, class: "btn btn-md btn-primary" %>
+            <%= link_to "残業申請", overtime_application_info_user_attendance_path(@user, day), remote: true, class: "btn btn-md btn-primary" %>
           </td>
           <td><%= l(day.worked_on, format: :short) %></td>
           <td>
@@ -133,11 +133,11 @@
             <% end %>
           </td>
           <td><%= day.note %></td>
+          <td><%= l(day.endplans_time, format: :time_h) if day.endplans_time.present? %></td>
+          <td><%= l(day.endplans_time, format: :time_m) if day.endplans_time.present? %></td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td><%= day.business_outline if day.business_outline.present? %></td>
+          <td><%= "残業申請:#{day.month_order_superior_id}【#{}】" if day.month_order_superior_id.present? %> </td>
         </tr>
       <% end %>
     </tbody>
@@ -152,7 +152,8 @@
         <td rowspan = "2">
           <div class="btn-group">
             <label>所属長承認&nbsp;&nbsp;&nbsp;<%= current_month_status(@first_day) %></label>
-            <%= form_with model: @attendance, url: one_month_application_attendance_path(first_day: @first_day), local: true, method: :patch do |f| %>
+            <!-- first_dayとすることで、コントローラーでparamsとして渡すことができる-->
+            <%= form_with model: @attendance, url: one_month_application_user_path(date: @first_day), local: true, method: :patch do |f| %>
               <%= f.collection_select :month_order_superior_id, User.superior_user_except_myself(session), :name, :name, {prompt: "選択してください"}, :include_blank => true %>
               <br>
               <%= f.submit "申請", class: "btn btn-block btn-primary" %>

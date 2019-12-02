@@ -10,7 +10,6 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <!-- first_dayにしないと全部の勤怠情報を取ってきてしまう？ -->
         <%= form_with model: @user, url: one_month_application_attendance_path(first_day: @first_day), local: true, method: :patch do |f| %>
           <% @title_name.each do |keys, values| %>
             <h1 class="modal-title"><%= "【#{User.find(keys).name}からの１ヶ月分勤怠申請】" %></h1>

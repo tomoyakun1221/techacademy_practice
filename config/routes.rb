@@ -20,7 +20,8 @@ Rails.application.routes.draw do
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
       get 'one_month_application_info'
-      post 'overtime_application_info'
+      patch 'one_month_application'
+      patch 'attendances/overtime_application'
     end
     collection { post :import }
     collection { get :working_employee_list }
@@ -28,11 +29,6 @@ Rails.application.routes.draw do
     resources :attendances, only: :update do
     end
   end
-    
-    resources :attendances, only: :update do
-      member do
-        patch 'one_month_application'
-        patch 'overtime_application'
-     end
-    end
-end
+  
+  get '/users/:user_id/attendances/:id/overtime_application_info', to: 'attendances#overtime_application_info', as: 'overtime_application_info_user_attendance'
+end 

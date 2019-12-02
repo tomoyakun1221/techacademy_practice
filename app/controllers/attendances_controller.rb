@@ -1,8 +1,8 @@
 class AttendancesController < ApplicationController
   include AttendancesHelper
   
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :working_employee_list, :one_month_application, :current_month_status]
-  before_action :logged_in_user, only: [:update, :edit_one_month, :one_month_application, :overtime_application]
+  before_action :set_user, only: [:edit_one_month, :update_one_month, :working_employee_list, :current_month_status, :overtime_application_info, :overtime_application]
+  before_action :logged_in_user, only: [:update, :edit_one_month, :overtime_application]
   before_action :admin_or_correct_user,  only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: :edit_one_month
   
@@ -51,29 +51,19 @@ class AttendancesController < ApplicationController
     redirect_to attendances_edit_one_month_user_url(@user)
   end
   
+  #残業申請モーダル
+  def overtime_application_info
+    @attendance = Attendance.find(params[:id])
+  end
+  
   #残業申請更新
   def overtime_application
-    @user = User.find(params[:attendance][:user_id])
-    @attendance = @user.attendances.find_by(params[:attendance][:id])
+    @attendance = @user.attendances.find_by(worked_on: params[:attendance][:day])
     if params[:attendance][:endplans_time].blank?  || params[:attendance][:business_outline].blank?
       flash[:warning] = "必須箇所が空欄です。"
     else
       @attendance.update_attributes(update_overtime_params)
       flash[:success] = "残業申請が完了しました。"
-    end
-    #ここは後に直す必要がある 20191128
-    redirect_to @user
-  end
-  
-  #１ヶ月分の勤怠申請更新
-  def one_month_application
-    day = params[:first_day]
-    @attendance = @user.attendances.find_by(worked_on: day)
-    unless params[:attendance][:month_order_superior_id].empty?
-      @attendance.update_attributes(update_one_month_application_params)
-      flash[:success] = "１ヶ月分の勤怠を申請をしました。#{@attendance.month_order_superior_id}の承認をお待ち下さい。"
-    else
-      flash[:danger] = "所属長を選択してください。"
     end
     redirect_to @user
   end
@@ -85,13 +75,9 @@ class AttendancesController < ApplicationController
     params.require(:user).permit(attendances: [:started_at, :finished_at, :note])[:attendances]
   end
   
-  def update_one_month_application_params
-    params.require(:attendance).permit(:month_order_superior_id)
-  end
-  
   #残業申請更新をします
   def update_overtime_params
-    params.require(:attendance).permit(:decision, :over_next_day, :endplans_time, :business_outline)
+    params.require(:attendance).permit(:endplans_time, :over_next_day, :business_outline, :month_order_superior_id)
   end
 
   # 管理権限者、または現在ログインしているユーザーを許可します。
