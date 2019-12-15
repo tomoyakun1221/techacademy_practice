@@ -18,14 +18,14 @@
               <th class="text-center">終了予定時間</th>
               <th class="text-center">翌日</th>
               <th class="text-center">業務処理内容</th>
-              <th class="text-center">指示者確認印</th>
+              <th class="text-center">指示者確認㊞</th>
             </tr>
           </thead>
 
           <tbody>
             <tr>
               <!-- 日付 -->
-              <!--hidden_fieldで日付を持たせて、コントローラーで使わないと、月初の情報を -->
+              <!--hidden_fieldで日付を持たせて、コントローラーで使わないと、月初の情報を取得できない -->
               <td class="text-center"><%= l(@attendance.worked_on, format: :short) %>
                                       <%= f.hidden_field :day, :value => @attendance.worked_on %></td>
               <!-- 曜日 -->
@@ -40,18 +40,17 @@
               </td>
               <!-- 終了予定時間 -->
               <td class="text-center"><%= f.time_field :endplans_time, class: 'form-control' %>
-                                      <%= f.hidden_field :hidden_endplans_time, :value => :endplans_time %></td>
-              
               <!-- 翌日 -->
               <td class="text-center"><%= f.check_box :over_next_day, {}, checked_value = "true", unchecked_value = "false" %></td>
               <!-- 業務処理内容 -->
               <td class="text-center"><%= f.text_field :business_outline, class: 'form-control' %></td>
               <!-- 指示者確認印 -->
-              <td class="text-center"><%= f.collection_select :month_order_superior_id, User.superior_user_except_myself(session), :name, :name, {prompt: "選択してください"}, :include_blank => true %></td>
+              <td class="text-center"><%= f.collection_select :overtime_order_id, User.superior_user_except_myself(session), :name, :name, {prompt: "選択してください"}, :include_blank => true %></td>
             </tr>
           </tbody>
         </table>
         <%= f.submit "残業を申請する", class: "btn btn-block btn-primary" %>
+        <%= f.hidden_field :overtime_order_status, :value => @attendance.overtime_order_id %>
       <% end %>
     </div>
   </div>

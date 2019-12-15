@@ -97,20 +97,30 @@ class UsersController < ApplicationController
   #1ヶ月分の勤怠申請
   def one_month_application_info
     @first_day = params[:date].nil? ? Date.current.beginning_of_month : params[:date].to_date
-    @title_name = Attendance.joins(:user).where(month_order_id: current_user.name)
+    @title_name = Attendance.where(month_order_id: current_user.name)
   end
   
   #１ヶ月分の勤怠申請更新
   def one_month_application
     day = params[:date]
     @attendance = @user.attendances.find_by(worked_on: day)
-    unless params[:attendance][:month_order_superior_id].empty?
+    unless params[:attendance][:month_order_id].empty?
       @attendance.update_attributes(update_one_month_application_params)
-      flash[:success] = "１ヶ月分の勤怠を申請をしました。#{@attendance.month_order_superior_id}の承認をお待ち下さい。"
+      flash[:success] = "１ヶ月分の勤怠を申請をしました。#{@attendance.month_order_id}の承認をお待ち下さい。"
     else
       flash[:danger] = "所属長を選択してください。"
     end
     redirect_to @user
+  end
+  
+  #残業申請のお知らせモーダル
+  def overtime_application_notice
+    @attendance = Attendance.find(params[:id])
+    @user = User.find(@attendance.user_id)
+    @title_name = Attendance.where(month_order_id: current_user.name).group_by(&:user_id)
+    pp @attendance
+    pp @user
+    pp @title_name
   end
 
   private
@@ -120,7 +130,7 @@ class UsersController < ApplicationController
     
     #1ヶ月分の勤怠申請の通知をします
     def update_one_month_application_params
-      params.require(:attendance).permit(:month_order_superior_id)
+      params.require(:attendance).permit(:month_order_id)
     end
 
     def basic_info_params

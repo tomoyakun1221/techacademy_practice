@@ -22,13 +22,20 @@ Rails.application.routes.draw do
       get 'one_month_application_info'
       patch 'one_month_application'
       patch 'attendances/overtime_application'
+      get 'overtime_application_notice'
     end
     collection { post :import }
     collection { get :working_employee_list }
     collection { get :basic_info_edit }
-    resources :attendances, only: :update do
-    end
+    resources :attendances, only: :update
   end
-  
+    
+    resources :attendances, only: :update do
+      member do
+        patch 'overtime_application_notice'
+      end
+    end
+
+  #残業申請のモーダルを表示するためにuser_idとidを持たせた
   get '/users/:user_id/attendances/:id/overtime_application_info', to: 'attendances#overtime_application_info', as: 'overtime_application_info_user_attendance'
-end 
+end

@@ -30,27 +30,34 @@
   </table>
 </div>
 
-<% if %>
-  <%= link_to "【所属長承認申請のお知らせ】", one_month_application_info_user_path(@user), remote: true, class: "notice" %>
-  <h5 class="notification"><%= %>件の通知があります</h5>
-<% else %>
-  <h5>【所属長承認申請のお知らせ】</h5>
+<% if current_user?(@user)%>
+  <% if current_user.superior? %>
+    <%= link_to "【所属長承認申請のお知らせ】", one_month_application_info_user_path(@user), remote: true, class: "notice" %>
+    <h5 class="notification"><%= "#{Attendance.where(month_order_id: current_user.name).count}"  %>件の通知があります</h5>
+    <br>
+  <% end %>
 <% end %>
-<br>
-<% if %>
-  <%= link_to "【勤怠変更申請のお知らせ】", one_month_application_info_user_path(date: @first_day), remote: true, class: "notice" %>
-  <h5 class="notification"><%= %>件の通知があります</h5>
-<% else %>
-  <h5>【勤怠変更申請のお知らせ】</h5>
+
+<% if current_user?(@user)%>
+  <% if current_user.superior? %>
+    <%= link_to "【勤怠変更申請のお知らせ】", one_month_application_info_user_path(@first_day), remote: true, class: "notice" %>
+    <h5 class="notification"><%=  %>件の通知があります</h5>
+    <br>
+  <% end %>
 <% end %>
-<br>
-<% if %>
-  <%= link_to "【残業申請のお知らせ】", attendances_edit_one_month_user_path(date: @first_day), remote: true, class: "notice" %>
-  <h5 class="notification"><%= %>件の通知があります</h5>
-<% else %>
-  <h5>【残業申請のお知らせ】</h5>
+
+<% if current_user?(@user)%>
+  <% if current_user.superior? %>
+    <% if attendance_check = true %>
+      <%= link_to "【残業申請のお知らせ】", overtime_application_notice_user_path(@user), remote: true, class: "notice" %>
+      <h5 class="notification"><%= "#{Attendance.where(overtime_order_id: current_user.name).count}" %>件の通知があります</h5>
+      <br>
+    <% else %>
+      <h5>【残業申請のお知らせ】</h5>
+    <% end %>
+  <% end %>
 <% end %>
-<br>
+
 <div style="display: inline-flex">
   <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-md btn-primary" %>
 
@@ -135,9 +142,15 @@
           <td><%= day.note %></td>
           <td><%= l(day.endplans_time, format: :time_h) if day.endplans_time.present? %></td>
           <td><%= l(day.endplans_time, format: :time_m) if day.endplans_time.present? %></td>
-          <td></td>
+          <% if day.started_at.present? && day.finished_at.present? && day.endplans_time.present? %>
+            <td><%= overtime_worked_time(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %></td>
+          <% elsif day.over_next_day == true && day.started_at.present? && day.finished_at.present? && day.endplans_time.present? %>
+            <td><%= tomorrow_time(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %></td>
+          <% else %>
+            <td></td>
+          <% end %>
           <td><%= day.business_outline if day.business_outline.present? %></td>
-          <td><%= "残業申請:#{day.month_order_superior_id}【#{}】" if day.month_order_superior_id.present? %> </td>
+          <td><%= "残業申請:#{day.overtime_order_id}【#{current_day_status(day.worked_on)}】" if day.overtime_order_id.present? %> </td>
         </tr>
       <% end %>
     </tbody>
@@ -154,7 +167,7 @@
             <label>所属長承認&nbsp;&nbsp;&nbsp;<%= current_month_status(@first_day) %></label>
             <!-- first_dayとすることで、コントローラーでparamsとして渡すことができる-->
             <%= form_with model: @attendance, url: one_month_application_user_path(date: @first_day), local: true, method: :patch do |f| %>
-              <%= f.collection_select :month_order_superior_id, User.superior_user_except_myself(session), :name, :name, {prompt: "選択してください"}, :include_blank => true %>
+              <%= f.collection_select :month_order_id, User.superior_user_except_myself(session), :name, :name, {prompt: "選択してください"}, :include_blank => true %>
               <br>
               <%= f.submit "申請", class: "btn btn-block btn-primary" %>
             <% end %>
@@ -183,5 +196,8 @@
 <!-- １ヶ月の勤怠申請のお知らせ -->
 <div id="one_month_application_info" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>
 
-<!-- 残業申請のお知らせ -->
+<!-- 残業申請 -->
 <div id="overtime_application_info" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>
+
+<!-- 残業申請のお知らせ -->
+<div id="overtime_application_notice" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>

@@ -49,38 +49,51 @@ module UsersHelper
   def basic_info_edit
   end
   
-  #指示者確認㊞の表示
-  def instructor confirmation
-    
-  end
-  
    # 所属長承認の表示(１ヶ月分)
   def current_month_status(day)
     @attendance = @user.attendances.find_by(worked_on: day)
     name = User.superior_user_except_myself(session).map { |name| name[:name] }
-    if name.index(@attendance.month_order_superior_id)
-      "#{@attendance.month_order_superior_id}に申請中"
+    if name.index(@attendance.month_order_id)
+      "#{@attendance.month_order_id}に申請中"
     elsif @attendance.decision == "承認"
-      "#{@attendance.month_order_superior_id}から承認済"
+      "#{@attendance.month_order_id}から承認済"
     elsif @attendance.decision == "否認"
-      "#{@attendance.month_order_superior_id}から否認"
+      "#{@attendance.month_order_id}から否認"
     else
       "未"
     end
   end
   
-   # 所属長承認の表示(１ヶ月分)
+  # 所属長承認の表示(1日分)
   def current_day_status(day)
     @attendance = @user.attendances.find_by(worked_on: day)
     name = User.superior_user_except_myself(session).map { |name| name[:name] }
-    if name.index(@attendance.month_order_superior_id)
-      "#{@attendance.month_order_superior_id}に申請中"
+    if name.index(@attendance.overtime_order_id)
+      "申請中"
     elsif @attendance.decision == "承認"
-      "#{@attendance.month_order_superior_id}から承認済"
+      "承認済"
     elsif @attendance.decision == "否認"
-      "#{@attendance.month_order_superior_id}から否認"
+      "否認"
     else
       "未"
     end
   end
+  
+  #残業申請のあった人からのチェックロジック
+  def attendance_check
+    @users = User.all
+    @users.each do |user| 
+      @attendance = Attendance.where(user_id: user.id)
+      @attendances.each do |attendance|
+        at = true
+        if attendance.overtime_order_id.present? && attendance.overtime_order_id.to_i == user.id
+          next
+        else
+          at = false
+        end
+        return at
+      end
+    end
+  end
 end
+

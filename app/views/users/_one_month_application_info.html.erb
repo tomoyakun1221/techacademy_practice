@@ -10,7 +10,7 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <%= form_with model: @user, url: one_month_application_attendance_path(first_day: @first_day), local: true, method: :patch do |f| %>
+        <%= form_with model: @user, url: one_month_application_attendance_path(date: @first_day), local: true, method: :patch do |f| %>
           <% @title_name.each do |keys, values| %>
             <h1 class="modal-title"><%= "【#{User.find(keys).name}からの１ヶ月分勤怠申請】" %></h1>
               <table class="table table-bordered table-condensed table-striped">
