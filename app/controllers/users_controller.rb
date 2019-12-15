@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   include UsersHelper
   
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :send_posts_csv, :current_month_status, :one_month_application_info, :one_month_application]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :send_posts_csv, :current_month_status, :one_month_application_info, :one_month_application, :overtime_application_notice]
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :one_month_application]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info, :edit_one_month]
@@ -111,16 +111,6 @@ class UsersController < ApplicationController
       flash[:danger] = "所属長を選択してください。"
     end
     redirect_to @user
-  end
-  
-  #残業申請のお知らせモーダル
-  def overtime_application_notice
-    @attendance = Attendance.find(params[:id])
-    @user = User.find(@attendance.user_id)
-    @title_name = Attendance.where(month_order_id: current_user.name).group_by(&:user_id)
-    pp @attendance
-    pp @user
-    pp @title_name
   end
 
   private

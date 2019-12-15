@@ -25,18 +25,18 @@ User.create!(name: "上長B",
              department: "上長B",
              superior: true)
 
-600.times do |n|
+60.times do |n|
   name = Faker::Name.name
   email = "sample-#{n+4}@email.com"
   password = "password"
   employee_number = n+4
   user_card_id = n+4
   User.create!(name: name,
-              email: email,
-              employee_number: employee_number,
-              user_card_id: user_card_id,
-              password: password,
-              password_confirmation: password,
-              admin:     false,
-              superior:  false)
+               email: email,
+               employee_number: employee_number,
+               user_card_id: user_card_id,
+               password: password,
+               password_confirmation: password,
+               admin:     false,
+               superior:  false)
 end

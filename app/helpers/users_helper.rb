@@ -55,9 +55,9 @@ module UsersHelper
     name = User.superior_user_except_myself(session).map { |name| name[:name] }
     if name.index(@attendance.month_order_id)
       "#{@attendance.month_order_id}に申請中"
-    elsif @attendance.decision == "承認"
+    elsif @attendance.decision == 2
       "#{@attendance.month_order_id}から承認済"
-    elsif @attendance.decision == "否認"
+    elsif @attendance.decision == 3
       "#{@attendance.month_order_id}から否認"
     else
       "未"
@@ -70,29 +70,12 @@ module UsersHelper
     name = User.superior_user_except_myself(session).map { |name| name[:name] }
     if name.index(@attendance.overtime_order_id)
       "申請中"
-    elsif @attendance.decision == "承認"
+    elsif @attendance.decision == 2
       "承認済"
-    elsif @attendance.decision == "否認"
+    elsif @attendance.decision == 3
       "否認"
     else
       "未"
-    end
-  end
-  
-  #残業申請のあった人からのチェックロジック
-  def attendance_check
-    @users = User.all
-    @users.each do |user| 
-      @attendance = Attendance.where(user_id: user.id)
-      @attendances.each do |attendance|
-        at = true
-        if attendance.overtime_order_id.present? && attendance.overtime_order_id.to_i == user.id
-          next
-        else
-          at = false
-        end
-        return at
-      end
     end
   end
 end

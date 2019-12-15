@@ -10,10 +10,12 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <%= form_with model: @user, url: overtime_application_notice_attendance_path, local: true, method: :patch do |f| %>
+        <%= form_with model: @user, url: update_overtime_application_notice_attendance_path, local: true, method: :patch do |f| %>
+        <!-- ここにインスタンス変数を記載しないと、結果を返すことができない -->
+        <% @title_name = Attendance.joins(:user).where(overtime_order_id: current_user.name).group_by(&:user_id) %>
           <% @title_name.each do |keys, values| %>
             <h1 class="modal-title"><%= "【#{User.find(keys).name}からの残業申請】" %></h1>
-              <table class="table table-bordered table-condensed table-striped">
+              <table class="table table-bordered table-striped table-condensed">
                 <thead>
                   <tr>
                     <td class="text-center">日付</td>
@@ -27,22 +29,21 @@
                     <td class="text-center">勤怠を変更する</td>
                   </tr>
                 </thead>
-
                 <tbody>
                   <% values.each do |value| %>
                     <%= fields_for "attendances[]", value do |af| %>
                       <tr>
                         <!-- 日付 -->
-                        <td class="text-center"><%= l(@attendance.worked_on, format: :short) %>
-                                      　　   　  　<%= f.hidden_field :day, :value => @attendance.worked_on %></td>
+                        <td class="text-center"><%= l(value.worked_on, format: :short) %>
+                                                <%= f.hidden_field :day, :value => value.worked_on %></td>
                         <!-- 曜日 -->
                         <td class="text-center">
-                          <% if @attendance.worked_on.wday == 6 %>
-                            <font color="Blue"><%= $days_of_the_week[@attendance.worked_on.wday] %></font>
-                          <% elsif @attendance.worked_on.wday == 0  %>
-                            <font color="Red"><%= $days_of_the_week[@attendance.worked_on.wday] %></font>
+                          <% if value.worked_on.wday == 6 %>
+                            <font color="Blue"><%= $days_of_the_week[value.worked_on.wday] %></font>
+                          <% elsif value.worked_on.wday == 0  %>
+                            <font color="Red"><%= $days_of_the_week[value.worked_on.wday] %></font>
                           <% else %>
-                            <%= $days_of_the_week[@attendance.worked_on.wday] %>
+                            <%= $days_of_the_week[value.worked_on.wday] %>
                           <% end %>
                         </td>
                         <!-- 終了予定時間 -->
@@ -50,7 +51,7 @@
                         <!-- 指定勤務終了時間 -->
                         <td class="text-center"><%= l(User.find(keys).user_designated_work_end_time, format: :time) %></td>
                         <!-- 時間外時間 -->
-                        <td class="text-center"><%= l(value.endplans_time, format: :time).to_f - l(User.find(keys).user_designated_work_end_time, format: :time).to_f %></td>
+                        <td class="text-center"><%= endplans_time_minus_user_designated_work_end_time(value.endplans_time, User.find(keys).user_designated_work_end_time) %></td>
                         <!-- 業務処理内容 -->
                         <td class="text-center"><%= value.business_outline %></td>
                         <!-- 指示者確認㊞ -->
