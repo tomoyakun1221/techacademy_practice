@@ -1,0 +1,124 @@
+<% provide(:title, '勤怠確認') %>
+<div>
+  <table class="table table-bordered table-condensed user-table">
+    <tr>
+      <td>
+        <br>
+        <span class="align-middle">&nbsp;&nbsp;&nbsp;<%= l(@first_day, format: :middle) %>&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
+      </td>
+      <td ><br>
+        指定勤務開始時間&nbsp;&nbsp;&nbsp;<%= format_basic_info(@user.user_designated_work_start_time) %><br>
+        指定勤務終了時間&nbsp;&nbsp;&nbsp;<%= format_basic_info(@user.user_designated_work_end_time) %>
+      </td>
+      <td colspan="3"><br>基本時間&nbsp;&nbsp;&nbsp;<%= format_basic_info(@user.basic_time) %></td>
+      <td><br>初日&nbsp;&nbsp;&nbsp;<%= l(@first_day, format: :short) %></td>
+    </tr>
+
+    <tr>
+      <td>所属&nbsp;&nbsp;&nbsp;<%= @user.department.present? ? @user.department : "未所属" %></td>
+      <td>氏名&nbsp;&nbsp;&nbsp;<%= @user.name %></td>
+      <td>コード</td>
+      <td><%= @user.employee_number %></td>
+      <td>出勤日数&nbsp;&nbsp;&nbsp;<%= @worked_sum %>日</td>
+      <td>締め&nbsp;&nbsp;&nbsp;<%= l(@last_day, format: :short) %></td>
+    </tr>
+  </table>
+</div>
+
+<div>
+  <table class="table table-bordered table-condensed table-striped" id="table-attendances">
+    <thead>
+      <tr>
+        <th rowspan="3">残業申請</th>
+        <th rowspan="3">日付</th>
+        <th rowspan="3">曜日</th>
+        <th colspan="8">【実績】</th>
+        <th colspan="8">所定外勤務</th>
+      </tr>
+      <tr>
+        <td colspan="3">出社</td>
+        <td colspan="3">退社</td>
+        <td rowspan="2">在社時間</td>
+        <td rowspan="2">備考</td>
+        <td colspan="2">終了予定時間</td>
+        <td rowspan="2">時間外時間</td>
+        <td rowspan="2">業務処理内容</td>
+        <td rowspan="2">指示者確認㊞</td>
+      </tr>
+      <tr>
+        <td>時</td>
+        <td>分</td>
+        <td></td>
+        <td>時</td>
+        <td>分</td>
+        <td></td>
+        <td>時</td>
+        <td>分</td>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @attendances.each do |day| %>
+        <tr>
+          <td></td>
+          <td><%= l(day.worked_on, format: :short) %></td>
+          <td>
+            <% if day.worked_on.wday == 6 %>
+              <font color="Blue"><%= $days_of_the_week[day.worked_on.wday] %></font>
+            <% elsif day.worked_on.wday == 0  %>
+              <font color="Red"><%= $days_of_the_week[day.worked_on.wday] %></font>
+            <% else %>
+              <%= $days_of_the_week[day.worked_on.wday] %>
+            <% end %>
+          </td>
+          <td><%= l(day.started_at, format: :time_h) if day.started_at.present? %></td>
+          <td><%= l(day.started_at.floor_to(15.minutes), format: :time_m) if day.started_at.present? %></td>
+          <td></td>
+          <td><%= l(day.finished_at, format: :time_h) if day.finished_at.present? %></td>
+          <td><%= l(day.finished_at.floor_to(15.minutes), format: :time_m) if day.finished_at.present? %></td>
+          <td></td>
+          <td>
+            <% if day.started_at.present? && day.finished_at.present? %>
+              <%= day_work_time = worked_time(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+              <% @total_time = format("%.2f", @total_time.to_f + day_work_time.to_f)%>
+            <% end %>
+          </td>
+          <td><%= day.note %></td>
+          <td><%= l(day.endplans_time, format: :time_h) if day.endplans_time.present? %></td>
+          <td><%= l(day.endplans_time, format: :time_m) if day.endplans_time.present? %></td>
+            <% if day.over_next_day == true %>
+              <td class="text-center"><%= tomorrow_time(User.find(@user.id).user_designated_work_end_time.seconds_since_midnight, day.endplans_time.seconds_since_midnight) if day.endplans_time.present? %></td>
+            <% else %>
+              <td class="text-center"><%= worked_time(User.find(@user.id).user_designated_work_end_time.seconds_since_midnight, day.endplans_time.seconds_since_midnight) if day.endplans_time.present? %></td>
+            <% end %>
+          <td><%= day.business_outline if day.business_outline.present? %></td>
+          <td><%= "残業申請:#{day.overtime_order_id}【#{current_day_status(day.worked_on)}】" if day.overtime_order_id.present? %>
+              <br>
+              <%= "勤怠編集:#{day.attendance_change_order_id}【#{attendance_change_status(day.worked_on)}】" if day.attendance_change_order_id.present? %></td>
+        </tr>
+      <% end %>
+    </tbody>
+    
+    <tfoot>
+      <tr>
+        <th colspan="2"></th>
+        <th colspan="6"></th>
+        <th>累計在社時間</th>
+        <th></th>
+        <th colspan="5"></th>
+        <td rowspan = "2">
+          <div class="btn-group">
+            <label>所属長承認&nbsp;&nbsp;&nbsp;<%= current_month_status(@first_day) %></label>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2"><%= @worked_sum %></td>
+        <td colspan="6"></td>
+        <td><%= @total_time %></td>
+        <td></td>
+        <td colspan="5"></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

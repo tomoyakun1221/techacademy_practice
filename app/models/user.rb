@@ -24,7 +24,7 @@ class User < ApplicationRecord
   # 上長一覧(自分が上長の場合、自分を除く)
   def User.superior_user_except_myself(session)
     if User.find(session[:user_id]).superior == true
-      where(superior: true).where.not(id: session[:user_id])
+      where(superior: true).where.not(id: session[:user_id])  
     else
       where(superior: true)
     end

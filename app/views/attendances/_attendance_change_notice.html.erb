@@ -1,0 +1,95 @@
+<% provide(:button_text, '変更を送信する') %>
+<% provide(:class_text, 'change-notice') %>
+
+<div class="modal-dialog modal-lg modal-dialog-center">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">✖︎</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <%= form_with model: @user, url: update_attendance_change_notice_attendance_path(date: @first_day), local: true, method: :patch do |f| %>
+        <!-- ここにインスタンス変数を記載しないと、結果を返すことができない -->
+        <% @title_name = Attendance.joins(:user).where(attendance_change_order_id: current_user.name).group_by(&:user_id) %>
+          <% @title_name.each do |keys, values| %>
+            <h1 class="modal-title"><%= "【#{User.find(keys).name}からの勤怠変更申請】" %></h1>
+              <table class="table table-bordered table-striped table-condensed">
+                <thead>
+                  <tr>
+                    <th class="text-center" rowspan="3">日付</th>
+                    <th class="text-center" rowspan="3">曜日</th>
+                    <th class="text-center" colspan="4">変更前</th>
+                    <th class="text-center" colspan="4">変更後</th>
+                    <th class="text-center" rowspan="3">備考</th>
+                    <th class="text-center" rowspan="3">指示者確認㊞</th>
+                    <th class="text-center" rowspan="3">変更</th>
+                    <th class="text-center" rowspan="3">勤怠を変更する</th>
+                  </tr>
+                  <tr>
+                    <td class="text-center" colspan="2">出社</td>
+                    <td class="text-center" colspan="2">退社</td>
+                    <td class="text-center" colspan="2">出社</td>
+                    <td class="text-center" colspan="2">退社</td>
+                  </tr>
+                  <tr>
+                    <td class="text-center">時</td>
+                    <td class="text-center">分</td>
+                    <td class="text-center">時</td>
+                    <td class="text-center">分</td>
+                    <td class="text-center">時</td>
+                    <td class="text-center">分</td>
+                    <td class="text-center">時</td>
+                    <td class="text-center">分</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% values.each do |value| %>
+                    <%= f.fields_for "attendances[]", value do |af| %>
+                      <tr>
+                        <!-- 日付 -->
+                        <td class="text-center"><%= l(value.worked_on, format: :short) %></td>
+                        <!-- 曜日 -->
+                        <td class="text-center">
+                          <% if value.worked_on.wday == 6 %>
+                            <font color="Blue"><%= $days_of_the_week[value.worked_on.wday] %></font>
+                          <% elsif value.worked_on.wday == 0  %>
+                            <font color="Red"><%= $days_of_the_week[value.worked_on.wday] %></font>
+                          <% else %>
+                            <%= $days_of_the_week[value.worked_on.wday] %>
+                          <% end %>
+                        </td>
+                        <!--変更前-->
+                        <!--出社時間(時)-->
+                        <td class="text-center"><% l(value.started_at, format: :time_h)%></td>
+                        <!--出社時間(分)-->
+                        <td class="text-center"><% l(value.started_at.floor_to(15.minutes), format: :time_m) %></td>
+                        <!--退社時間(時)-->
+                        <td class="text-center"><% l(value.finished_at, format: :time_h) %></td>
+                        <!--退社時間(分)-->
+                        <td class="text-center"><%= l(value.finished_at.floor_to(15.minutes), format: :time_m) %></td>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                        <td class="text-center"></td>
+                        <!--備考-->
+                        <td class="text-center"><%= value.note %></td>
+                        <!-- 指示者確認㊞ -->
+                        <td class="text-center"><%= af.select :decision, Attendance.decisions.keys, class: "form-control" %></td>
+                        <!-- 確認 -->
+                        <td class="text-center"><%= af.check_box :agreement, {}, checked_value = "true", unchecked_value = "false" %></td>
+                        <!--勤怠を変更する-->
+                        <td class="text-center"><%= link_to "確認", show_only_user_path(@user), class: "btn btn-primary" %></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                </tbody>
+              </table>
+          <% end %>
+          <%= f.submit yield(:button_text), class: "btn btn-block btn-primary btn-#{yield(:class_text)}" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

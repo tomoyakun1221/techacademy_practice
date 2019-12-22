@@ -11,7 +11,6 @@
           <th>翌日</th>
           <th>在社時間</th>
           <th>備考</th>
-          <th>残業指示</th>
           <th>指示者</th>
         </tr>
       </thead>
@@ -37,15 +36,16 @@
                 <td><%= attendance.time_field :started_at, class: "form-control" %></td>
                 <td><%= attendance.time_field :finished_at, class: "form-control" %></td>
               <% end %>
+              <td><%= attendance.check_box :over_next_day_attendance_change, {}, checked_value = "true", unchecked_value = "false" %></td>
               <td>
-                <% if day.started_at.present? && day.finished_at.present? %>
-                  <%= worked_time(day.started_at, day.finished_at) %>
+                <% if day.started_at.present? && day.finished_at.present? && day.over_next_day_attendance_change == false %>
+                  <%= worked_time(day.started_at.seconds_since_midnight, day.finished_at.seconds_since_midnight) %>
+                <% elsif day.started_at.present? && day.finished_at.present? && day.over_next_day_attendance_change == true %>
+                  <%= tomorrow_time(day.started_at.seconds_since_midnight, day.finished_at.seconds_since_midnight) %>
                 <% end %>
               </td>
-              <td></td>
               <td><%= attendance.text_field :note, class: "form-control" %></td>
-              <td></td>
-              <td></td>
+              <td><%= attendance.collection_select :attendance_change_order_id, User.superior_user_except_myself(session), :name, :name, {prompt: "選択してください"}, :include_blank => true %></td>
             </tr>
           <% end %>
         <% end %>

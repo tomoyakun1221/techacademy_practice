@@ -40,9 +40,13 @@
 
 <% if current_user?(@user)%>
   <% if current_user.superior? %>
-    <%= link_to "【勤怠変更申請のお知らせ】", one_month_application_info_user_path(@first_day), remote: true, class: "notice" %>
-    <h5 class="notification"><%=  %>件の通知があります</h5>
-    <br>
+    <% if Attendance.find_by(attendance_change_order_id: current_user.name) %>
+      <%= link_to "【勤怠変更申請のお知らせ】", attendance_change_notice_attendance_path, remote: true, class: "notice" %>
+      <h5 class="notification"><%= "#{Attendance.joins(:user).where(attendance_change_order_id: current_user.name).count}"  %>件の通知があります</h5>
+      <br>
+    <% else %>
+      <h5>【勤怠変更申請のお知らせ】</h5>
+    <% end %>
   <% end %>
 <% end %>
 
@@ -134,23 +138,26 @@
             <% end %>
           </td>
           <td>
-            <% if day.started_at.present? && day.finished_at.present? %>
-              <%= day_work_time = worked_time(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %>
+            <% if day.started_at.present? && day.finished_at.present? && day.over_next_day_attendance_change == false %>
+              <%= day_work_time = worked_time(day.started_at.floor_to(15.minutes).seconds_since_midnight, day.finished_at.floor_to(15.minutes).seconds_since_midnight) %>
+              <% @total_time = format("%.2f", @total_time.to_f + day_work_time.to_f)%>
+            <% elsif day.started_at.present? && day.finished_at.present? && day.over_next_day_attendance_change == true %>
+              <%= day_work_time = tomorrow_time(day.started_at.floor_to(15.minutes).seconds_since_midnight, day.finished_at.floor_to(15.minutes).seconds_since_midnight) %>
               <% @total_time = format("%.2f", @total_time.to_f + day_work_time.to_f)%>
             <% end %>
           </td>
           <td><%= day.note %></td>
           <td><%= l(day.endplans_time, format: :time_h) if day.endplans_time.present? %></td>
           <td><%= l(day.endplans_time, format: :time_m) if day.endplans_time.present? %></td>
-          <% if day.started_at.present? && day.finished_at.present? && day.endplans_time.present? %>
-            <td><%= overtime_worked_time(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %></td>
-          <% elsif day.over_next_day == true && day.started_at.present? && day.finished_at.present? && day.endplans_time.present? %>
-            <td><%= tomorrow_time(day.started_at.floor_to(15.minutes), day.finished_at.floor_to(15.minutes)) %></td>
-          <% else %>
-            <td></td>
-          <% end %>
+            <% if day.over_next_day == true %>
+              <td class="text-center"><%= tomorrow_time(User.find(@user.id).user_designated_work_end_time.seconds_since_midnight, day.endplans_time.seconds_since_midnight) if day.endplans_time.present? %></td>
+            <% else %>
+              <td class="text-center"><%= worked_time(User.find(@user.id).user_designated_work_end_time.seconds_since_midnight, day.endplans_time.seconds_since_midnight) if day.endplans_time.present? %></td>
+            <% end %>
           <td><%= day.business_outline if day.business_outline.present? %></td>
-          <td><%= "残業申請:#{day.overtime_order_id}【#{current_day_status(day.worked_on)}】" if day.overtime_order_id.present? %> </td>
+          <td><%= "残業申請:#{day.overtime_order_id}【#{current_day_status(day.worked_on)}】" if day.overtime_order_id.present? %>
+              <br>
+              <%= "勤怠編集:#{day.attendance_change_order_id}【#{attendance_change_status(day.worked_on)}】" if day.attendance_change_order_id.present? %></td>
         </tr>
       <% end %>
     </tbody>
@@ -201,3 +208,6 @@
 
 <!-- 残業申請のお知らせ -->
 <div id="overtime_application_notice" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>
+
+<!-- 勤怠変更申請のお知らせ -->
+<div id="attendance_change_notice" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>

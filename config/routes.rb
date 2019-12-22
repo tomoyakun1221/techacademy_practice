@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       get 'one_month_application_info'
       patch 'one_month_application'
       patch 'attendances/overtime_application'
+      get 'show_only'
     end
     collection { post :import }
     collection { get :working_employee_list }
@@ -33,6 +34,8 @@ Rails.application.routes.draw do
       member do
         patch 'update_overtime_application_notice'
         get 'overtime_application_notice'
+        patch 'update_attendance_change_notice'
+        get 'attendance_change_notice'
       end
     end
 

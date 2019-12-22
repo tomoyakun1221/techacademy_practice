@@ -1,11 +1,12 @@
 class UsersController < ApplicationController
+  require "date"
   include UsersHelper
   
-  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :send_posts_csv, :current_month_status, :one_month_application_info, :one_month_application, :overtime_application_notice]
+  before_action :set_user, only: [:show, :show_only, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :send_posts_csv, :current_month_status, :one_month_application_info, :one_month_application, :overtime_application_notice, :custom_parse]
   before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :one_month_application]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info, :edit_one_month]
-  before_action :set_one_month, only: :show
+  before_action :set_one_month, only: [:show, :show_only]
 
   def index
     @users = User.paginate(page: params[:page])
@@ -16,13 +17,16 @@ class UsersController < ApplicationController
 
   def show
     @worked_sum = @attendances.where.not(started_at: nil, finished_at: nil).count
-    
+
     respond_to do |format|
       format.all
       format.csv do |csv|
         send_posts_csv(@attendances)
       end
     end
+  end
+  
+  def show_only
   end
   
   def send_posts_csv(attendances)
@@ -97,7 +101,7 @@ class UsersController < ApplicationController
   #1ヶ月分の勤怠申請
   def one_month_application_info
     @first_day = params[:date].nil? ? Date.current.beginning_of_month : params[:date].to_date
-    @title_name = Attendance.where(month_order_id: current_user.name)
+    @title_name = Attendance.joins(:user).where(overtime_order_id: current_user.name).group_by(&:user_id)
   end
   
   #１ヶ月分の勤怠申請更新
