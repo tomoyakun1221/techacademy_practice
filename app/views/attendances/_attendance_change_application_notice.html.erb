@@ -10,7 +10,7 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <%= form_with model: @user, url: update_attendance_change_notice_attendance_path(date: @first_day), local: true, method: :patch do |f| %>
+        <%= form_with model: @user, url: update_attendance_change_application_notice_attendance_path, local: true, method: :patch do |f| %>
         <!-- ここにインスタンス変数を記載しないと、結果を返すことができない -->
         <% @title_name = Attendance.joins(:user).where(attendance_change_order_id: current_user.name).group_by(&:user_id) %>
           <% @title_name.each do |keys, values| %>
@@ -25,7 +25,7 @@
                     <th class="text-center" rowspan="3">備考</th>
                     <th class="text-center" rowspan="3">指示者確認㊞</th>
                     <th class="text-center" rowspan="3">変更</th>
-                    <th class="text-center" rowspan="3">勤怠を変更する</th>
+                    <th class="text-center" rowspan="3">勤怠を確認する</th>
                   </tr>
                   <tr>
                     <td class="text-center" colspan="2">出社</td>
@@ -62,25 +62,31 @@
                         </td>
                         <!--変更前-->
                         <!--出社時間(時)-->
-                        <td class="text-center"><% l(value.started_at, format: :time_h)%></td>
+                        <td class="text-center"><%= l(value.started_at, format: :time_h) if value.started_at.present? %></td>
                         <!--出社時間(分)-->
-                        <td class="text-center"><% l(value.started_at.floor_to(15.minutes), format: :time_m) %></td>
+                        <td class="text-center"><%= l(value.started_at.floor_to(15.minutes), format: :time_m) if value.started_at.present? %></td>
                         <!--退社時間(時)-->
-                        <td class="text-center"><% l(value.finished_at, format: :time_h) %></td>
+                        <td class="text-center"><%= l(value.finished_at, format: :time_h) if value.finished_at.present? %></td>
                         <!--退社時間(分)-->
-                        <td class="text-center"><%= l(value.finished_at.floor_to(15.minutes), format: :time_m) %></td>
-                        <td class="text-center"></td>
-                        <td class="text-center"></td>
-                        <td class="text-center"></td>
-                        <td class="text-center"></td>
+                        <td class="text-center"><%= l(value.finished_at.floor_to(15.minutes), format: :time_m) if value.finished_at.present? %></td>
+                        <!--変更後-->
+                        <!--出社時間(時)-->
+                        <td class="text-center"><%= l(value.started_at_after, format: :time_h) if value.started_at_after.present? %></td>
+                        <!--出社時間(分)-->
+                        <td class="text-center"><%= l(value.started_at_after.floor_to(15.minutes), format: :time_m) if value.started_at_after.present? %></td>
+                        <!--退社時間(時)-->
+                        <td class="text-center"><%= l(value.finished_at_after, format: :time_h) if value.finished_at_after.present? %></td>
+                        <!--退社時間(分)-->
+                        <td class="text-center"><%= l(value.finished_at_after.floor_to(15.minutes), format: :time_m) if value.finished_at_after.present? %></td>
                         <!--備考-->
                         <td class="text-center"><%= value.note %></td>
                         <!-- 指示者確認㊞ -->
-                        <td class="text-center"><%= af.select :decision, Attendance.decisions.keys, class: "form-control" %></td>
+                        <!--enumは同じものを見る場合は、複数作成することはできないのでstring型で持たせた方が良い-->
+                        <td class="text-center"><%= af.select :decision_attendance_change, { なし: "なし", 申請中: "申請中", 承認: "承認", 否認: "否認" }, class: "form-control" %></td>       
                         <!-- 確認 -->
                         <td class="text-center"><%= af.check_box :agreement, {}, checked_value = "true", unchecked_value = "false" %></td>
                         <!--勤怠を変更する-->
-                        <td class="text-center"><%= link_to "確認", show_only_user_path(@user), class: "btn btn-primary" %></td>
+                        <td class="text-center"><%= link_to "確認", show_only_user_path, class: "btn btn-primary" %></td>
                       </tr>
                     <% end %>
                   <% end %>

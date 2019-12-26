@@ -32,16 +32,20 @@
 
 <% if current_user?(@user)%>
   <% if current_user.superior? %>
-    <%= link_to "【所属長承認申請のお知らせ】", one_month_application_info_user_path(@user), remote: true, class: "notice" %>
-    <h5 class="notification"><%= "#{Attendance.joins(:user).where(month_order_id: current_user.name).count}"  %>件の通知があります</h5>
-    <br>
+    <% if Attendance.find_by(month_order_id: current_user.name) %>
+      <%= link_to "【所属長承認申請のお知らせ】", one_month_application_notice_attendance_path, remote: true, class: "notice" %>
+      <h5 class="notification"><%= "#{Attendance.joins(:user).where(month_order_id: current_user.name).count}"  %>件の通知があります</h5>
+      <br>
+    <% else %>
+      <h5>【所属長承認申請のお知らせ】</h5>
+    <% end %>
   <% end %>
 <% end %>
 
 <% if current_user?(@user)%>
   <% if current_user.superior? %>
     <% if Attendance.find_by(attendance_change_order_id: current_user.name) %>
-      <%= link_to "【勤怠変更申請のお知らせ】", attendance_change_notice_attendance_path, remote: true, class: "notice" %>
+      <%= link_to "【勤怠変更申請のお知らせ】", attendance_change_application_notice_attendance_path, remote: true, class: "notice" %>
       <h5 class="notification"><%= "#{Attendance.joins(:user).where(attendance_change_order_id: current_user.name).count}"  %>件の通知があります</h5>
       <br>
     <% else %>
@@ -69,7 +73,7 @@
 </div>
 
 <div>
-  <%= link_to "勤怠修正ログ(承認済)", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-md btn-primary" %>
+  <%= link_to "勤怠修正ログ(承認済)", attendances_log_user_path(date: @first_day), class: "btn btn-md btn-primary" %>
 </div>
 
 <div>
@@ -155,9 +159,9 @@
               <td class="text-center"><%= worked_time(User.find(@user.id).user_designated_work_end_time.seconds_since_midnight, day.endplans_time.seconds_since_midnight) if day.endplans_time.present? %></td>
             <% end %>
           <td><%= day.business_outline if day.business_outline.present? %></td>
-          <td><%= "残業申請:#{day.overtime_order_id}【#{current_day_status(day.worked_on)}】" if day.overtime_order_id.present? %>
+          <td><%= "残業申請:#{overtime_day_status(day.worked_on)}" if day.overtime_order_status.present? ||  day.overtime_order_id.present? %>
               <br>
-              <%= "勤怠編集:#{day.attendance_change_order_id}【#{attendance_change_status(day.worked_on)}】" if day.attendance_change_order_id.present? %></td>
+              <%= "勤怠編集:#{attendance_change_status(day.worked_on)}" if day.attendance_change_order_status.present? || day.attendance_change_order_id.present? %></td>
         </tr>
       <% end %>
     </tbody>
@@ -173,9 +177,10 @@
           <div class="btn-group">
             <label>所属長承認&nbsp;&nbsp;&nbsp;<%= current_month_status(@first_day) %></label>
             <!-- first_dayとすることで、コントローラーでparamsとして渡すことができる-->
-            <%= form_with model: @attendance, url: one_month_application_user_path(date: @first_day), local: true, method: :patch do |f| %>
+            <%= form_with model: @attendance, url: update_one_month_application_user_path(date: @first_day), local: true, method: :patch do |f| %>
               <%= f.collection_select :month_order_id, User.superior_user_except_myself(session), :name, :name, {prompt: "選択してください"}, :include_blank => true %>
               <br>
+              <%= f.hidden_field :decision_month_order, :value => "申請中" %>
               <%= f.submit "申請", class: "btn btn-block btn-primary" %>
             <% end %>
           </div>
@@ -201,7 +206,7 @@
 <div id="new" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>
 
 <!-- １ヶ月の勤怠申請のお知らせ -->
-<div id="one_month_application_info" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>
+<div id="one_month_application_notice" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>
 
 <!-- 残業申請 -->
 <div id="overtime_application_info" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>
@@ -210,4 +215,4 @@
 <div id="overtime_application_notice" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>
 
 <!-- 勤怠変更申請のお知らせ -->
-<div id="attendance_change_notice" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>
+<div id="attendance_change_application_notice" class="modal fade" tabindex="-1" rule="dialog" area-hidden="true"></div>

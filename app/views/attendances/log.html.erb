@@ -1,0 +1,35 @@
+<% provide(:title, "勤怠ログ一覧") %>
+
+<div class="container">
+  <h1>勤怠ログ</h1>
+    <div class="col-md-10 col-md-offset-1">
+      <table class="table table-bordered table-condensed table-striped">
+        <thead>
+          <tr>
+            <th class="center">日付</th>
+            <th class="center">変更前出社時間</th>
+            <th class="center">変更前退社時間</th>
+            <th class="center">変更後出社時間</th>
+            <th class="center">変更後退社時間</th>
+            <th class="center">指示者</th>
+            <th class="center">承認日</th>
+          </tr> 
+        </thead>
+        <% @attendances.each do |day| %>
+          <% if day.started_at.present? && day.finished_at.present? && day.started_at_after.present? && day.finished_at_after.present? && day.decision_attendance_change == "承認" %>
+            <tbody>
+              <tr>
+                <td align="center"><%= day.worked_on %></td>
+                <td align="center"><%= l(day.started_at.floor_to(15.minutes), format: :time) %></td>
+                <td align="center"><%= l(day.finished_at.floor_to(15.minutes), format: :time) %></td>
+                <td align="center"><%= l(day.started_at_after.floor_to(15.minutes), format: :time) %></td>
+                <td align="center"><%= l(day.finished_at_after.floor_to(15.minutes), format: :time) %></td>
+                <td align="center"><%= day.attendance_change_order_status %></td>
+                <td align="center"><%= l(day.updated_at, format: :middle) %></td>
+              </tr>
+            </tbody>
+          <% end %>
+        <% end %>
+      </table>
+    </div>
+</div>

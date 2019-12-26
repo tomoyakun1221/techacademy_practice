@@ -14,12 +14,12 @@ module AttendancesHelper
   def attendances_invalid?
     attendances = true
     attendances_params.each do |id, item|
-      if item[:started_at].blank? && item[:finished_at].blank?
+      if item[:started_at_after].blank? && item[:finished_at_after].blank?
         next
-      elsif item[:started_at].blank? || item[:finished_at].blank?
+      elsif item[:started_at_after].blank? || item[:finished_at_after].blank?
         attendances = false
         break
-      elsif item[:started_at] > item[:finished_at] && item[:over_next_day_attendance_change] == "false"  
+      elsif item[:started_at_after] > item[:finished_at_after] && item[:over_next_day_attendance_change] == "false"  
         attendances = false
         break
       end

@@ -1,9 +1,8 @@
 class UsersController < ApplicationController
-  require "date"
   include UsersHelper
   
-  before_action :set_user, only: [:show, :show_only, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :send_posts_csv, :current_month_status, :one_month_application_info, :one_month_application, :overtime_application_notice, :custom_parse]
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :one_month_application]
+  before_action :set_user, only: [:show, :show_only, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :send_posts_csv, :current_month_status, :one_month_application_notice, :update_one_month_application, :overtime_application_notice, :custom_parse]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :one_month_application_notice, :update_one_month_application]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info, :edit_one_month]
   before_action :set_one_month, only: [:show, :show_only]
@@ -86,6 +85,10 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
+  def working_employee_list
+    @attendances = Attendance.all.includes(:user)
+  end
+
   def edit_basic_info
   end
 
@@ -98,14 +101,8 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
   
-  #1ヶ月分の勤怠申請
-  def one_month_application_info
-    @first_day = params[:date].nil? ? Date.current.beginning_of_month : params[:date].to_date
-    @title_name = Attendance.joins(:user).where(overtime_order_id: current_user.name).group_by(&:user_id)
-  end
-  
   #１ヶ月分の勤怠申請更新
-  def one_month_application
+  def update_one_month_application
     day = params[:date]
     @attendance = @user.attendances.find_by(worked_on: day)
     unless params[:attendance][:month_order_id].empty?
@@ -124,7 +121,7 @@ class UsersController < ApplicationController
     
     #1ヶ月分の勤怠申請の通知をします
     def update_one_month_application_params
-      params.require(:attendance).permit(:month_order_id)
+      params.require(:attendance).permit(:month_order_id, :decision_month_order)
     end
 
     def basic_info_params

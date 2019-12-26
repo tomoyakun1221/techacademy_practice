@@ -14,10 +14,6 @@ module UsersHelper
     end
     redirect_to users_url
   end
-
-  def working_employee_list
-    @attendances = Attendance.all.includes(:user)
-  end
   
   # CSVインポート
   def import
@@ -48,52 +44,48 @@ module UsersHelper
 
   def basic_info_edit
   end
-  
+ 
    # 所属長承認の表示(１ヶ月分)
   def current_month_status(day)
     @attendance = @user.attendances.find_by(worked_on: day)
-    name = User.superior_user_except_myself(session).map { |name| name[:name] }
-    
-    if name.index(@attendance.month_order_id)
+    if @attendance.decision_month_order.to_s == "なし"
+      "#{@attendance.month_order_status}:なし"
+    elsif @attendance.decision_month_order.to_s == "申請中"
       "#{@attendance.month_order_id}に申請中"
-    elsif @attendance.decision == "承認"
-      "#{@attendance.month_order_id}から承認済"
-    elsif @attendance.decision == "否認"
-      "#{@attendance.month_order_id}から否認"
+    elsif @attendance.decision_month_order.to_s == "承認"
+      "#{@attendance.month_order_status}から承認済"
+    elsif @attendance.decision_month_order.to_s == "否認"
+      "#{@attendance.month_order_status}から否認"
     else
       "未"
     end
   end
   
   #残業申請の表示
-  def current_day_status(day)
+  def overtime_day_status(day)
     @attendance = @user.attendances.find_by(worked_on: day)
     if @attendance.decision.to_s == "なし"
-      "なし"
+      "#{@attendance.overtime_order_status}:なし"
     elsif @attendance.decision.to_s == "申請中"
-      "申請中"
+      "#{@attendance.overtime_order_id}に申請中"
     elsif @attendance.decision.to_s == "承認"
-      "承認済"
+      "#{@attendance.overtime_order_status}から承認済"
     elsif @attendance.decision.to_s == "否認"
-      "否認"
-    else
-      "申請中"
+      "#{@attendance.overtime_order_status}から否認"
     end
   end
   
   #勤怠変更申請の表示
   def attendance_change_status(day)
     @attendance = @user.attendances.find_by(worked_on: day)
-    if @attendance.decision.to_s == "なし"
-      "なし"
-    elsif @attendance.decision.to_s == "申請中"
-      "申請中"
-    elsif @attendance.decision.to_s == "承認"
-      "承認済"
-    elsif @attendance.decision.to_s == "否認"
-      "否認"
-    else
-      "申請中"
+    if @attendance.decision_attendance_change == "なし"
+      "#{@attendance.attendance_change_order_status}:なし"
+    elsif @attendance.decision_attendance_change == "申請中"
+      "#{@attendance.attendance_change_order_id}に申請中"
+    elsif @attendance.decision_attendance_change == "承認"
+      "#{@attendance.attendance_change_order_status}から承認済"
+    elsif @attendance.decision_attendance_change == "否認"
+      "#{@attendance.attendance_change_order_status}から否認"
     end
   end
 end

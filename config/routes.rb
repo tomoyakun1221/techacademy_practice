@@ -19,23 +19,26 @@ Rails.application.routes.draw do
       patch 'update_basic_info'
       get 'attendances/edit_one_month'
       patch 'attendances/update_one_month'
-      get 'one_month_application_info'
-      patch 'one_month_application'
+      patch 'update_one_month_application'
       patch 'attendances/overtime_application'
       get 'show_only'
+      get 'attendances/log'
     end
     collection { post :import }
     collection { get :working_employee_list }
     collection { get :basic_info_edit }
-    resources :attendances, only: :update
+    resources :attendances, only: :update do
+    end
   end
     
     resources :attendances, only: :update do
       member do
         patch 'update_overtime_application_notice'
         get 'overtime_application_notice'
-        patch 'update_attendance_change_notice'
-        get 'attendance_change_notice'
+        patch 'update_attendance_change_application_notice'
+        get 'attendance_change_application_notice'
+        get 'one_month_application_notice'
+        patch 'update_one_month_application_notice'
       end
     end
 

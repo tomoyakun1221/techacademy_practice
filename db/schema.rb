@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191222120625) do
+ActiveRecord::Schema.define(version: 20191226232926) do
 
   create_table "attendances", force: :cascade do |t|
     t.date "worked_on"
@@ -31,6 +31,11 @@ ActiveRecord::Schema.define(version: 20191222120625) do
     t.string "business_outline"
     t.string "attendance_change_order_id"
     t.boolean "over_next_day_attendance_change"
+    t.string "decision_attendance_change"
+    t.string "decision_month_order"
+    t.datetime "started_at_after"
+    t.datetime "finished_at_after"
+    t.string "attendance_change_order_status"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
@@ -51,12 +56,13 @@ ActiveRecord::Schema.define(version: 20191222120625) do
     t.string "remember_digest"
     t.boolean "admin", default: false
     t.string "department"
-    t.datetime "basic_time", default: "2019-12-21 23:00:00"
-    t.datetime "work_time", default: "2019-12-21 22:30:00"
+    t.datetime "basic_time", default: "2019-12-25 23:00:00"
+    t.datetime "work_time", default: "2019-12-25 22:30:00"
     t.integer "employee_number"
-    t.datetime "user_designated_work_start_time", default: "2019-12-22 00:00:00"
-    t.datetime "user_designated_work_end_time", default: "2019-12-22 09:00:00"
+    t.datetime "user_designated_work_start_time", default: "2019-12-26 00:00:00"
+    t.datetime "user_designated_work_end_time", default: "2019-12-26 09:00:00"
     t.string "user_card_id"
+    t.integer "decision"
     t.boolean "superior", default: false
   end
 

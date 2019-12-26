@@ -10,7 +10,7 @@
     </div>
     <div class="modal-body">
       <div class="row">
-        <%= form_with model: @user, url: update_overtime_application_notice_attendance_path(date: @first_day), local: true, method: :patch do |f| %>
+        <%= form_with model: @user, url: update_overtime_application_notice_attendance_path, local: true, method: :patch do |f| %>
         <!-- ここにインスタンス変数を記載しないと、結果を返すことができない -->
         <% @title_name = Attendance.joins(:user).where(overtime_order_id: current_user.name).group_by(&:user_id) %>
           <% @title_name.each do |keys, values| %>
@@ -26,7 +26,7 @@
                     <td class="text-center">業務処理内容</td>
                     <td class="text-center">指示者確認㊞</td>
                     <td class="text-center">変更</td>
-                    <td class="text-center">勤怠を変更する</td>
+                    <td class="text-center">勤怠を確認する</td>
                   </tr>
                 </thead>
                 <tbody>
