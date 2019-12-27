@@ -15,13 +15,35 @@ module UsersHelper
     redirect_to users_url
   end
   
-  # CSVインポート
+  # # CSVインポート
+  # def import
+  #   # fileはtmpに自動で一時保存される
+  #   User.import(params[:file])
+  #   redirect_to users_url
+  # end
+  
+  # def self.import(file)
+  #   CSV.foreach(file.path, headers: true) do |row|
+  #     # IDが見つかれば、レコードを呼び出し、見つかれなければ、新しく作成
+  #     user = find_by(id: row["id"]) || new
+  #     # CSVからデータを取得し、設定する
+  #     user.attributes = row.to_hash.slice(*updatable_attributes)
+  #     # 保存する
+  #     user.save
+  #   end
+  # end
+  
+  # # 更新を許可するカラムを定義
+  # def self.updatable_attributes
+  #   ["id", "name", "email", "department", "employee_number", "user_card_id", "basic_time", "user_designated_work_start_time", "user_designated_work_end_time", "superior", "admin", "password"]
+  # end
+
+  
   def import
-    if params[:users_file] && File.extname("#{params[:users_file].original_filename}") == ".csv"
+    if params[:file] && File.extname("#{params[:file].original_filename}") == ".csv"
       # 登録処理前のレコード数
-      current_user_count = User.count
       users = []
-      CSV.foreach(params[:users_file].path, headers: true, encoding: "UTF-8") do |row|
+      CSV.foreach(params[:file].path, headers: true, encoding: "UTF-8") do |row|
         users << User.create({
           name:                            row['name'],
           email:                           row['email'],
@@ -35,7 +57,7 @@ module UsersHelper
           admin:                           row['admin'],
           password:                        row['password'] })
       end
-      flash[:success] = "#{User.count - current_user_count}人のアカウントを新規作成しました。"
+      flash[:success] = "アカウントを新規作成しました。"
     else
       flash[:danger] = "CSVファイルを選択してください。"
     end
@@ -79,13 +101,13 @@ module UsersHelper
   def attendance_change_status(day)
     @attendance = @user.attendances.find_by(worked_on: day)
     if @attendance.decision_attendance_change == "なし"
-      "#{@attendance.attendance_change_order_status}:なし"
-    elsif @attendance.decision_attendance_change == "申請中"
-      "#{@attendance.attendance_change_order_id}に申請中"
+      "勤怠編集:#{@attendance.attendance_change_order_status}:なし"
+    elsif @attendance.decision_attendance_change == "申請中" && @attendance.attendance_change_order_id == "上長A" || @attendance.attendance_change_order_id == "上長B" 
+      "勤怠編集:#{@attendance.attendance_change_order_id}に申請中"
     elsif @attendance.decision_attendance_change == "承認"
-      "#{@attendance.attendance_change_order_status}から承認済"
+      "勤怠編集:#{@attendance.attendance_change_order_status}から承認済"
     elsif @attendance.decision_attendance_change == "否認"
-      "#{@attendance.attendance_change_order_status}から否認"
+      "勤怠編集:#{@attendance.attendance_change_order_status}から否認"
     end
   end
 end

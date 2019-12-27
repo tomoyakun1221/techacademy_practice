@@ -161,7 +161,7 @@
           <td><%= day.business_outline if day.business_outline.present? %></td>
           <td><%= "残業申請:#{overtime_day_status(day.worked_on)}" if day.overtime_order_status.present? ||  day.overtime_order_id.present? %>
               <br>
-              <%= "勤怠編集:#{attendance_change_status(day.worked_on)}" if day.attendance_change_order_status.present? || day.attendance_change_order_id.present? %></td>
+              <%= "#{attendance_change_status(day.worked_on)}" if day.attendance_change_order_status.present? || day.attendance_change_order_id.present? %></td>
         </tr>
       <% end %>
     </tbody>

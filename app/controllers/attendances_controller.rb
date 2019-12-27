@@ -41,7 +41,7 @@ class AttendancesController < ApplicationController
       flash[:success] = "勤怠更新に成功しました(指示者確認㊞を選択していない場合は、上長への申請が出来ていません)。"
       redirect_to user_url(@user)
     else
-      flash[:danger] = "不正な時間入力または指示者確認㊞が選択されていません。再度ご確認ください。"
+      flash[:danger] = "不正な時間入力がありました。再度ご確認ください。"
       redirect_to attendances_edit_one_month_user_url(@user, params[:date])
     end
   end
@@ -84,8 +84,8 @@ class AttendancesController < ApplicationController
       elsif item[:decision_attendance_change] == "承認" && item[:agreement] == "true"
         attendance = Attendance.find(id)
         attendance.update_attributes(decision_attendance_change: item[:decision_attendance_change],
-                                     started_at_after: attendance.started_at_after,
-                                     finished_at_after: attendance.finished_at_after,
+                                     started_at: attendance.started_at_after,
+                                     finished_at: attendance.finished_at_after,
                                      attendance_change_order_id: item[:attendance_change_order_id],
                                      attendance_change_order_status: current_user.name)
       elsif item[:decision_attendance_change] == "否認" && item[:agreement] == "true"
