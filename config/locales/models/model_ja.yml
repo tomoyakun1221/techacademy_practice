@@ -10,7 +10,7 @@ ja:
         email: メールアドレス
         department: 所属
         employee_number: 社員番号
-        user_cardid: カードID
+        user_card_id: カードID
         password: パスワード
         password_confirmation: パスワード再入力
         user_designated_work_start_time: 指定勤務開始時間

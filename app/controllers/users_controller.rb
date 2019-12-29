@@ -118,7 +118,7 @@ class UsersController < ApplicationController
 
   private
     def user_params
-      params.require(:user).permit(:name, :email, :department, :password, :password_confirmation)
+      params.require(:user).permit(:name, :email, :department, :employee_number, :user_card_id, :password, :password_confirmation)
     end
     
     #1ヶ月分の勤怠申請の通知をします

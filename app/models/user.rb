@@ -7,8 +7,8 @@ class User < ApplicationRecord
   validates :department, length: { in: 2..30 }, allow_blank: true
   validates :basic_time, presence: true
   validates :work_time, presence: true
-  validates :employee_number, presence: true, uniqueness: true
-  validates :user_card_id, presence: true, uniqueness: true
+  validates :employee_number, presence: true
+  validates :user_card_id, presence: true
   validates :user_designated_work_start_time, presence: true
   validates :user_designated_work_end_time, presence: true
 
