@@ -53,10 +53,15 @@ class ApplicationController < ActionController::Base
     redirect_to root_url unless current_user.admin?
   end
 
-  # 管理権限者、または現在ログインしているユーザーを許可します。
+  # 管理者権限を持っているユーザーは勤怠の編集ができない。現在ログイ��しているユーザーを許可します。
   def admin_or_correct_user
-    @user = User.find(params[:id]) 
-    unless current_user.admin? || current_user?(@user)
+    @user = User.find(params[:id])
+    if current_user.admin?
+      flash[:danger] = "編集・操作権限がありません"
+      redirect_to root_url
+    end
+    
+    unless current_user?(@user)
       flash[:danger] = "編集・操作権限がありません"
       redirect_to root_url
     end

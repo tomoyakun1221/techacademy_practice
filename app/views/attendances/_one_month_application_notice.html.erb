@@ -33,7 +33,7 @@
                         <!--enumは同じものを見る場合は、複数作成することはできないのでstring型で持たせた方が良い-->
                         <td class="text-center"><%= af.select :decision_month_order, { なし: "なし", 申請中: "申請中", 承認: "承認", 否認: "否認" }, class: "form-control" %></td>
                         <td class="text-center"><%= af.check_box :agreement, {}, checked_value = "true", unchecked_value = "false" %></td>
-                        <td class="text-center"><%= link_to "確認", show_only_user_path, class: "btn btn-primary" %></td>
+                        <td class="text-center"><%= link_to "確認", show_only_user_path(User.find(keys), date: value.worked_on.beginning_of_month), class: "btn btn-primary" %></td>
                       </tr>
                     <% end %>
                   <% end %>

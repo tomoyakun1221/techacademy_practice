@@ -92,9 +92,9 @@
               <td class="text-center"><%= worked_time(User.find(@user.id).user_designated_work_end_time.seconds_since_midnight, day.endplans_time.seconds_since_midnight) if day.endplans_time.present? %></td>
             <% end %>
           <td><%= day.business_outline if day.business_outline.present? %></td>
-          <td><%= "残業申請:#{overtime_day_status(day.worked_on)}" if day.overtime_order_status.present? %>
+          <td><%= "残業申請:#{overtime_day_status(day.worked_on)}" if day.overtime_order_id.present? || day.overtime_order_status.present? %>
               <br>
-              <%= "#{attendance_change_status(day.worked_on)}" if day.attendance_change_order_status.present? %></td>
+              <%= "#{attendance_change_status(day.worked_on)}" if day.overtime_order_id.present? || day.attendance_change_order_status.present? %></td>
         </tr>
       <% end %>
     </tbody>

@@ -2,16 +2,21 @@ class UsersController < ApplicationController
   include UsersHelper
   
   before_action :set_user, only: [:show, :show_only, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :send_posts_csv, :current_month_status, :one_month_application_notice, :update_one_month_application, :overtime_application_notice, :custom_parse]
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :one_month_application_notice, :update_one_month_application]
-  before_action :correct_user, only: [:edit, :update]
-  before_action :admin_user, only: [:destroy, :edit_basic_info, :update_basic_info, :edit_one_month]
+  before_action :logged_in_user, only: [:show, :index, :edit, :update, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :one_month_application_notice, :update_one_month_application]
+  before_action :correct_user, only: [:show, :edit, :update]
+  before_action :admin_user, only: [:index, :destroy, :edit_basic_info, :update_basic_info, :edit_one_month, :working_employee_list, :basic_info_edit]
+  before_action :admin_or_correct_user, only: [:show]
   before_action :set_one_month, only: [:show, :show_only]
-
+  
   def index
     @users = User.paginate(page: params[:page])
     if params[:name].present?
       @users = @users.get_by_name params[:name]
     end
+  end
+  
+  def show_only
+    @worked_sum = @attendances.where.not(started_at: nil, finished_at: nil).count
   end
 
   def show
@@ -23,9 +28,6 @@ class UsersController < ApplicationController
         send_posts_csv(@attendances)
       end
     end
-  end
-  
-  def show_only
   end
   
   def send_posts_csv(attendances)

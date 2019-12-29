@@ -9,7 +9,7 @@
     <div class="modal-body">
       <h3 class="modal-title text-center">【残業申請】</h3>
       <!-- urlをcurrent_userで渡さないと、現在ログイン中のユーザーで残業申請できなくなる -->
-      <%= form_with model: @attendance, url: attendances_overtime_application_user_path(current_user), local: true, method: :patch do |f| %>
+      <%= form_with model: @attendance, url: attendances_overtime_application_user_path(current_user, date: @first_day), local: true, method: :patch do |f| %>
         <table class="table table-bordered table-striped table-condensed">
           <thead>
             <tr>

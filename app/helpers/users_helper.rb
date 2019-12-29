@@ -71,7 +71,7 @@ module UsersHelper
   def current_month_status(day)
     @attendance = @user.attendances.find_by(worked_on: day)
     if @attendance.decision_month_order.to_s == "なし"
-      "#{@attendance.month_order_status}:なし"
+      "#{@attendance.month_order_status}なし"
     elsif @attendance.decision_month_order.to_s == "申請中"
       "#{@attendance.month_order_id}に申請中"
     elsif @attendance.decision_month_order.to_s == "承認"
@@ -87,7 +87,7 @@ module UsersHelper
   def overtime_day_status(day)
     @attendance = @user.attendances.find_by(worked_on: day)
     if @attendance.decision.to_s == "なし"
-      "#{@attendance.overtime_order_status}:なし"
+      "#{@attendance.overtime_order_status}なし"
     elsif @attendance.decision.to_s == "申請中"
       "#{@attendance.overtime_order_id}に申請中"
     elsif @attendance.decision.to_s == "承認"
@@ -101,7 +101,7 @@ module UsersHelper
   def attendance_change_status(day)
     @attendance = @user.attendances.find_by(worked_on: day)
     if @attendance.decision_attendance_change == "なし"
-      "勤怠編集:#{@attendance.attendance_change_order_status}:なし"
+      "勤怠編集:#{@attendance.attendance_change_order_status}なし"
     elsif @attendance.decision_attendance_change == "申請中" && @attendance.attendance_change_order_id == "上長A" || @attendance.attendance_change_order_id == "上長B" 
       "勤怠編集:#{@attendance.attendance_change_order_id}に申請中"
     elsif @attendance.decision_attendance_change == "承認"

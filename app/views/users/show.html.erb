@@ -69,7 +69,7 @@
 <div style="display: inline-flex">
   <%= link_to "勤怠を編集", attendances_edit_one_month_user_path(date: @first_day), class: "btn btn-md btn-primary" %>
 
-  <%= link_to "CSV出力", user_path(format: :csv), class: "btn btn-md btn-primary" %>
+  <%= link_to "CSV出力", user_path(format: :csv, date: @first_day), class: "btn btn-md btn-primary" %>
 </div>
 
 <div>

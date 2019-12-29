@@ -86,7 +86,7 @@
                         <!-- 確認 -->
                         <td class="text-center"><%= af.check_box :agreement, {}, checked_value = "true", unchecked_value = "false" %></td>
                         <!--勤怠を変更する-->
-                        <td class="text-center"><%= link_to "確認", show_only_user_path, class: "btn btn-primary" %></td>
+                        <td class="text-center"><%= link_to "確認", show_only_user_path(User.find(keys), date: value.worked_on.beginning_of_month), class: "btn btn-primary" %></td>
                       </tr>
                     <% end %>
                   <% end %>

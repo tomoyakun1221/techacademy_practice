@@ -1,7 +1,7 @@
 class AttendancesController < ApplicationController
   include AttendancesHelper
   
-  before_action :set_user, only: [:edit_one_month, :update_one_month, :working_employee_list, :current_month_status, :overtime_application, :overtime_application_notice, :update_overtime_application_notice, :attendance_change_application_notice, :update_attendance_change_application_notice, :one_month_application_notice, :update_one_month_application_notice, :log]
+  before_action :set_user, only: [:show_only, :edit_one_month, :update_one_month, :working_employee_list, :current_month_status, :overtime_application, :overtime_application_notice, :update_overtime_application_notice, :attendance_change_application_notice, :update_attendance_change_application_notice, :one_month_application_notice, :update_one_month_application_notice, :log]
   before_action :logged_in_user, only: [:update, :edit_one_month, :overtime_application, :overtime_application_notice, :update_overtime_application_notice, :attendance_change_application_notice, :update_attendance_change_application_notice, :one_month_application_notice, :update_one_month_application_notice, :log]
   before_action :admin_or_correct_user,  only: [:update, :edit_one_month, :update_one_month]
   before_action :set_one_month, only: :edit_one_month
@@ -91,6 +91,8 @@ class AttendancesController < ApplicationController
       elsif item[:decision_attendance_change] == "否認" && item[:agreement] == "true"
         attendance = Attendance.find(id)
         attendance.update_attributes(decision_attendance_change: item[:decision_attendance_change],
+                                     started_at: nil,
+                                     finished_at: nil,
                                      started_at_after: nil,
                                      finished_at_after: nil,
                                      over_next_day_attendance_change: false,
