@@ -3,28 +3,21 @@
 
 <div class="container">
     <h1>ユーザ一覧</h1>
-    <div class="col-md-10 col-md-offset-1">
-      <%= form_tag import_users_path, method: :post, multipart: true do %>
-        <%= file_field_tag :file, class: "btn btn-default" %>
-        <%= submit_tag "CSVをインポート", class: "btn btn-md btn-primary btn-width" %>
-      <% end %>
-    </div>
+    <div class="col-md-10 col-md-offset-1"></div>
 
     <div class="col-md-10 col-md-offset-1">
-      <%= will_paginate %>
         <ul>
-          <% @users.each do |user| %>
-            <li><%= user.name %></li>
-            <li><span>| </span><%= link_to '削除', user, method: :delete,
+            <li></li>
+            <li><span>| </span><%= link_to '削除', "#", method: :delete,
                   data: { confirm: '削除してもよろしいでしょうか？' }, class: "btn btn-primary" %>
             </li>
             <li>
             <!-- アコーディオン -->
               <div class="panel panel-default">
-                <a href="#collapse<%= user.id %>" data-toggle="collapse" class="btn btn-primary btn-lg collapsed">編集</a>
+                <a href="#collapse<%#= user.id %>" data-toggle="collapse" class="btn btn-primary btn-lg collapsed">編集</a>
               </div>
-              <div style="padding: 10px; margin-bottom: 10px; border: 0.5px solid #c0c0c0; border-radius: 5px;" id="collapse<%= user.id %>" class="collapse">
-                <%= form_with(model: user, url: update_basic_info_user_path(user), local: true, method: :patch) do |f| %>
+              <div style="padding: 10px; margin-bottom: 10px; border: 0.5px solid #c0c0c0; border-radius: 5px;" id="collapse<%#= user.id %>" class="collapse">
+                <%= form_with(url: "#", local: true, method: :patch) do |f| %>
                   <%= f.label :name %>
                   <%= f.text_field :name, class: "form-control" %>
                 
@@ -59,8 +52,6 @@
                 <% end %>
               </div>
             </li>
-          <% end %>
         </ul>
-      <%= will_paginate %>
     </div>
 </div> 
