@@ -1,1 +1,2 @@
 # techacademy_practice
+テックアカデミー受講生向けチーム開発課題
