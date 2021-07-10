@@ -10,16 +10,12 @@
             <th class="center">名前</th>
           </tr> 
         </thead>
-        <% @attendances.each do |day| %>
-          <% if day.started_at.present? && day.finished_at.blank? %>
-            <tbody>
-              <tr>
-                <td align="center"><%= day.user.employee_number %></td>
-                <td align="center"><%= day.user.name %></td>
-              </tr>
-            </tbody>
-          <% end %>
-        <% end %>
+          <tbody>
+            <tr>
+              <td align="center"></td>
+              <td align="center"></td>
+            </tr>
+          </tbody>
       </table>
     </div>
 </div>

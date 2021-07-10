@@ -1,5 +1,4 @@
 <% provide(:title, @user.name) %>
-<%= form_with(model: @user, url: attendances_update_one_month_user_path(date: @first_day), local: true, method: :patch) do |f| %>
   <div>
     <table class="table table-bordered table-condensed table-striped" id="table-attendances">
       <thead>
@@ -16,45 +15,17 @@
       </thead>
       
       <tbody>
-        <% @attendances.each do |day| %>
-          <%= f.fields_for "attendances[]", day do |attendance| %>
             <tr>
-              <td><%= l(day.worked_on, format: :short) %></td>
-              <td>
-                <% if day.worked_on.wday == 6 %>
-                  <font color="Blue"><%= $days_of_the_week[day.worked_on.wday] %></font>
-                <% elsif day.worked_on.wday == 0  %>
-                  <font color="Red"><%= $days_of_the_week[day.worked_on.wday] %></font>
-                <% else %>
-                  <%= $days_of_the_week[day.worked_on.wday] %>
-                <% end %>
-              </td>
-              <% if Date.current < day.worked_on %>
-                <td><%= attendance.time_field :started_at_after, readonly: true, class: "form-control" %></td>
-                <td><%= attendance.time_field :finished_at_after, readonly: true, class: "form-control" %></td>
-              <% else %>
-                <td><%= attendance.time_field :started_at_after, class: "form-control" %></td>
-                <td><%= attendance.time_field :finished_at_after, class: "form-control" %></td>
-              <% end %>
-              <td><%= attendance.check_box :over_next_day_attendance_change, {}, checked_value = "true", unchecked_value = "false" %></td>
-              <td>
-                <% if day.started_at_after.present? && day.finished_at_after.present? && day.over_next_day_attendance_change == false %>
-                  <%= worked_time(day.started_at_after.seconds_since_midnight, day.finished_at_after.seconds_since_midnight) %>
-                <% elsif day.started_at_after.present? && day.finished_at_after.present? && day.over_next_day_attendance_change == true %>
-                  <%= tomorrow_time(day.started_at_after.seconds_since_midnight, day.finished_at_after.seconds_since_midnight) %>
-                <% end %>
-              </td>
-              <td><%= attendance.text_field :note, class: "form-control" %></td>
-              <td><%= attendance.collection_select :attendance_change_order_id, User.superior_user_except_myself(session), :name, :name, {prompt: "選択してください"}, :include_blank => true %></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
-            <%= attendance.hidden_field :decision_attendance_change, :value => "申請中" %>
-          <% end %>
-        <% end %>
       </tbody>
     </table>
   　<div class="center">
-  　   <%= link_to "キャンセル", user_path(date: @first_day), class: "btn btn-md btn-default" %>
-  　   <%= f.submit "編集を保存する", class: "btn btn-md btn-primary" %>
+  　   <%= link_to "キャンセル", "#", class: "btn btn-md btn-default" %>
   　</div>
   </div>
-<% end %>

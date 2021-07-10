@@ -8,8 +8,6 @@
     </div>
     <div class="modal-body">
       <h3 class="modal-title text-center">【残業申請】</h3>
-      <!-- urlをcurrent_userで渡さないと、現在ログイン中のユーザーで残業申請できなくなる -->
-      <%= form_with model: @attendance, url: attendances_overtime_application_user_path(current_user, date: @first_day), local: true, method: :patch do |f| %>
         <table class="table table-bordered table-striped table-condensed">
           <thead>
             <tr>
@@ -26,31 +24,20 @@
             <tr>
               <!-- 日付 -->
               <!--hidden_fieldで日付を持たせて、コントローラーで使わないと、月初の情報を取得できない -->
-              <td class="text-center"><%= l(@attendance.worked_on, format: :short) %>
-                                      <%= f.hidden_field :day, :value => @attendance.worked_on %></td>
+              <td class="text-center"></td>
               <!-- 曜日 -->
-              <td class="text-center">
-                <% if @attendance.worked_on.wday == 6 %>
-                  <font color="Blue"><%= $days_of_the_week[@attendance.worked_on.wday] %></font>
-                <% elsif @attendance.worked_on.wday == 0  %>
-                  <font color="Red"><%= $days_of_the_week[@attendance.worked_on.wday] %></font>
-                <% else %>
-                  <%= $days_of_the_week[@attendance.worked_on.wday] %>
-                <% end %>
-              </td>
+              <td class="text-center"></td>
               <!-- 終了予定時間 -->
-              <td class="text-center"><%= f.time_field :endplans_time, class: 'form-control' %>
+              <td class="text-center">
               <!-- 翌日 -->
-              <td class="text-center"><%= f.check_box :over_next_day, {}, checked_value = "true", unchecked_value = "false" %></td>
+              <td class="text-center"></td>
               <!-- 業務処理内容 -->
-              <td class="text-center"><%= f.text_field :business_outline, class: 'form-control' %></td>
+              <td class="text-center"></td>
               <!-- 指示者確認印 -->
-              <td class="text-center"><%= f.collection_select :overtime_order_id, User.superior_user_except_myself(session), :name, :name, {prompt: "選択してください"}, :include_blank => true %></td>
+              <td class="text-center"></td>
             </tr>
           </tbody>
         </table>
-        <%= f.hidden_field :decision, :value => "申請中" %>
-        <%= f.submit "残業を申請する", class: "btn btn-block btn-primary" %>
       <% end %>
     </div>
   </div>
