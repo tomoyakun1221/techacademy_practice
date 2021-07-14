@@ -14,7 +14,7 @@
             <li>
             <!-- アコーディオン -->
               <div class="panel panel-default">
-                <a href="#collapse<%#= user.id %>" data-toggle="collapse" class="btn btn-primary btn-lg collapsed">編集</a>
+                <a href="#collapse" data-toggle="collapse" class="btn btn-primary btn-lg collapsed">編集</a>
               </div>
               <div style="padding: 10px; margin-bottom: 10px; border: 0.5px solid #c0c0c0; border-radius: 5px;" id="collapse<%#= user.id %>" class="collapse">
                 <%= form_with(url: "#", local: true, method: :patch) do |f| %>
