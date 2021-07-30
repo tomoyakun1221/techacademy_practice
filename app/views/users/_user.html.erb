@@ -5,7 +5,7 @@
   <%= f.text_field :name, class: "form-control" %>
 
   <%= f.label :uid %>
-  <%= f.email_field :uid, class: "form-control" %>
+  <%= f.text_field :uid, class: "form-control" %>
   
   <%= f.label :password %>
   <%= f.password_field :password, class: "form-control" %>
@@ -14,7 +14,7 @@
   <%= f.password_field :password_confirmation, class: "form-control" %>
   
   <%= f.label :role %>
-  <%= f.time_field :role, class: "form-control" %>
+  <%= f.text_field :role, class: "form-control" %>
   
   <br>
   <%= f.submit yield(:button_text), class: "btn btn-primary btn-block" %>
