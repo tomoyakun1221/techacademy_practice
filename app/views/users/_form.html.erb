@@ -4,23 +4,17 @@
   <%= f.label :name, class: "label-#{yield(:class_text)}" %>
   <%= f.text_field :name, class: "form-control" %>
 
-  <%= f.label :email, class: "label-#{yield(:class_text)}" %>
-  <%= f.email_field :email, class: "form-control" %>
-    
-  <%= f.label :department, class: "label-#{yield(:class_text)}" %>
-  <%= f.text_field :department, class: "form-control" %>
-  
-  <%= f.label :employee_number, class: "label-#{yield(:class_text)}" %>
-  <%= f.text_field :employee_number, class: "form-control" %>
-  
-  <%= f.label :user_card_id, class: "label-#{yield(:class_text)}" %>
-  <%= f.text_field :user_card_id, class: "form-control" %>
+  <%= f.label :uid, class: "label-#{yield(:class_text)}" %>
+  <%= f.email_field :uid, class: "form-control" %>
 
   <%= f.label :password, class: "label-#{yield(:class_text)}" %>
   <%= f.password_field :password, class: "form-control" %>
 
   <%= f.label :password_confirmation, class: "label-#{yield(:class_text)}" %>
   <%= f.password_field :password_confirmation, class: "form-control" %>
+  
+  <%= f.label :role, class: "label-#{yield(:class_text)}" %>
+  <%= f.password_field :role, class: "form-control" %>
   
   <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
 <% end %>
