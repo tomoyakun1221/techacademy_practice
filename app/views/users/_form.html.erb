@@ -4,7 +4,7 @@
   <%= f.label :name, class: "label-#{yield(:class_text)}" %>
   <%= f.text_field :name, class: "form-control" %>
 
-  <%= f.label :uid, class: "label-#{yield(:class_text)}" %>
+  <%= f.label :職員コード, class: "label-#{yield(:class_text)}" %>
   <%= f.text_field :uid, class: "form-control" %>
 
   <%= f.label :password, class: "label-#{yield(:class_text)}" %>
@@ -13,8 +13,11 @@
   <%= f.label :password_confirmation, class: "label-#{yield(:class_text)}" %>
   <%= f.password_field :password_confirmation, class: "form-control" %>
   
-  <%= f.label :role, class: "label-#{yield(:class_text)}" %>
-  <%= f.text_field :role, class: "form-control" %>
+  <%= f.label :上長 %>
+  <%= f.check_box :superior, {:checked => 1}, 1, 0 %>
+  
+  <%= f.label :管理者 %>
+  <%= f.check_box :admin, {:checked => 1}, 1, 0 %>
   
   <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
 <% end %>
