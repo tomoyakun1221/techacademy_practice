@@ -13,11 +13,13 @@
   <%= f.label :password_confirmation %>
   <%= f.password_field :password_confirmation, class: "form-control" %>
   
-  <%= f.label :上長 %>
-  <%= f.check_box :superior, {:checked => 1}, 1, nil %>
+  <%= f.check_box :role, {}, :superior %>
+  <%= label_tag '上長', '' %>
+  <%= f.label :foo, '上長' %>
   
-  <%= f.label :管理者 %>
-  <%= f.check_box :admin, {:checked => 1}, 1, nil %>
+  <%= f.check_box :role, {}, :admin %>
+  <%= label_tag '管理者', '' %>
+  <%= f.label :foo, '管理者' %>
   
   <br>
   <%= f.submit yield(:button_text), class: "btn btn-primary btn-block" %>
