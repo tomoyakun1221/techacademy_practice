@@ -1,35 +1,26 @@
-<%= form_with(url: "#", local: true, method: :patch) do |f| %>
-  <%= render 'shared/error_messages', object: @user %>
+<%= form_with(model: @user, local: true) do |f| %>
+  <%= render 'shared/error_messages', model: f.object %>
 
   <%= f.label :name %>
   <%= f.text_field :name, class: "form-control" %>
 
-  <%= f.label :email %>
-  <%= f.email_field :email, class: "form-control" %>
-    
-  <%= f.label :department %>
-  <%= f.text_field :department, class: "form-control" %>
-
-  <%= f.label :employee_number %>
-  <%= f.number_field :employee_number, class: "form-control" %>
-
-  <%= f.label :user_card_id %>
-  <%= f.text_field :user_card_id, class: "form-control" %>
+  <%= f.label :職員コード %>
+  <%= f.text_field :uid, class: "form-control" %>
   
   <%= f.label :password %>
   <%= f.password_field :password, class: "form-control" %>
   
   <%= f.label :password_confirmation %>
   <%= f.password_field :password_confirmation, class: "form-control" %>
-
-  <%= f.label :basic_time %>
-  <%= f.time_field :basic_time, class: "form-control" %>
   
-  <%= f.label :user_designated_work_start_time %>
-  <%= f.time_field :user_designated_work_start_time, class: "form-control" %>
+  <%= f.check_box :role, {}, :superior %>
+  <%= label_tag '上長', '' %>
+  <%= f.label :foo, '上長' %>
   
-  <%= f.label :user_designated_work_end_time %>
-  <%= f.time_field :user_designated_work_end_time, class: "form-control" %>
+  <%= f.check_box :role, {}, :admin %>
+  <%= label_tag '管理者', '' %>
+  <%= f.label :foo, '管理者' %>
+  
   <br>
   <%= f.submit yield(:button_text), class: "btn btn-primary btn-block" %>
 <% end %>
