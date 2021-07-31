@@ -7,7 +7,7 @@ ja:
       user:
         id: ID
         name: 名前
-        uid: 職員番号
+        uid: 職員コード
         password: パスワード
         password_confirmation: パスワード再入力
         role: 役職
