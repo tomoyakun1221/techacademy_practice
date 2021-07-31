@@ -16,9 +16,6 @@ ActiveRecord::Schema.define(version: 20210730132156) do
     t.string "uid"
     t.string "name"
     t.integer "role"
-    t.integer "superior_flag"
-    t.integer "admin_flag"
-    t.integer "admin"
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
