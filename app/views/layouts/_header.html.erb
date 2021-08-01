@@ -1,9 +1,9 @@
 <header class="navbar navbar-fixed-top navbar-inverse">
   <div class="container">
-    <%= link_to "勤怠システム", "#", id: "logo" %>
+    <%= link_to "勤怠システム", root_path, id: "logo" %>
     <nav>
       <ul class="nav navbar-nav navbar-right">
-        <li><%= link_to "トップへ", "#" %></li>
+        <li><%= link_to "トップへ", root_path %></li>
         <% if logged_in? %>
           <% if current_user.admin? %>
             <li><%= link_to "ユーザー一覧", "#" %></li>
@@ -20,12 +20,12 @@
               <li><%= link_to "設定", "#" %></li>
               <li class="divider"></li>
               <li>
-                <%= link_to "ログアウト", "#", method: :delete %>
+                <%= link_to "ログアウト", logout_path , method: :delete %>
               </li>
             </ul>
           </li>
         <% else %>
-          <li><%= link_to "ログイン", "#" %></li>
+          <li><%= link_to "ログイン", login_path %></li>
         <% end %>
       </ul>
     </nav>

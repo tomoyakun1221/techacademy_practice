@@ -4,9 +4,9 @@
 <h1>勤怠システム</h1>
 
 <% if logged_in? %>
-  <%= link_to "ログイン", "#", class: "btn btn-lg btn-primary btn-signup disabled" %>
+  <%= link_to "ログイン", login_path, class: "btn btn-lg btn-primary btn-signup disabled" %>
 <% else %>
-  <%= link_to "ログイン", "#", class: "btn btn-lg btn-primary btn-signup" %>
+  <%= link_to "ログイン", login_path, class: "btn btn-lg btn-primary btn-signup" %>
 <% end %>
 
 <p>ユーザー情報がまだの場合は<%= link_to "こちら", new_user_path %></p>
