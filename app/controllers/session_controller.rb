@@ -8,15 +8,15 @@ class SessionController < ApplicationController
   def create
     uid = params[:session][:uid]
     password = params[:session][:password]
-    remember_me = params[:session][:remember_me]
+    # remember_me = params[:session][:remember_me]
     
     @user = User.find_by(uid: uid)
     
     if @user && @user.authenticate(password)
       log_in(@user)
-      if remember_me == 1
-        remember(@user)
-      end
+      # if remember_me == 1
+      #   remember(@user)
+      # end
       flash[:success] = 'ログインしました。'
       redirect_to root_url
     else

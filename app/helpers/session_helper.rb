@@ -7,21 +7,21 @@ module SessionHelper
   
   #セッションとcurrent_userを破棄する
   def log_out
-    forget(current_user)
+    # forget(current_user)
     session.delete(:user_id)
     @current_user = nil
   end
   
   #永続セッションを記憶する
   def remember(user)
-    # user.remember
+    user.remember
     cookies.permanent.signed[:user_id] = user.id
     cookies.permanent[:remember_token] = user.remember_token
   end
   
   #永続的セッションの破棄
   def forget(user)
-    # user.forget
+    user.forget
     cookies.delete(:user_id)
     cookies.delete(:remember_token)
   end
