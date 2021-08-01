@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
   
   def index
-    @user = User.all
+    @users = User.all
+   
   end
   
   def new
@@ -33,6 +34,8 @@ class UsersController < ApplicationController
       render 'edit'
     end
   end
+  
+  
   
   private
 
