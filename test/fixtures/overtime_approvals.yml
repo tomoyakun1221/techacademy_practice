@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  end_time: 2021-08-02 22:02:03
+  nextday_flag: false
+  application_situation: 1
+  comment: MyText
+
+two:
+  end_time: 2021-08-02 22:02:03
+  nextday_flag: false
+  application_situation: 1
+  comment: MyText
