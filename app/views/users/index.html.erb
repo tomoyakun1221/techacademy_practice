@@ -9,10 +9,10 @@
       <% @users.each do |user| %>
         <ul>
             <li></li>
-            <li class="destroy_button"><span><%= user.name %></span><%= link_to '削除', user_path(user), method: :delete,
+            <li><span><%= user.name %></span><%= link_to '削除', user_path(user), method: :delete,
                   data: { confirm: '削除してもよろしいでしょうか？' }, class: "btn btn-primary index_button" %>
             </li>
-            <li class="edit_button">
+            <li>
             <!-- アコーディオン -->
               <div class="panel panel-default">
                 <a href="#collapse" data-toggle="collapse" class="btn btn-primary index_button collapsed">編集</a>
