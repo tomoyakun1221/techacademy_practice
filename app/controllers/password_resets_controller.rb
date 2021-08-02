@@ -1,5 +1,7 @@
 class PasswordResetsController < ApplicationController
   
+  before_action :set_user, only: [:edit, :update]
+
   def new
   end
   
@@ -17,8 +19,6 @@ class PasswordResetsController < ApplicationController
   end
   
   def edit
-    @user = User.find(params[:id])
-    
     if @user && (@user.uid == session[:uid])
       session.delete(:uid)
       return @user
@@ -27,12 +27,10 @@ class PasswordResetsController < ApplicationController
       flash.now[:danger] = '職員コードを入力してください。'
       render :new
     end
-    
   end
   
   def update
-    @user = User.find(params[:id])
-    password_params = params.permit(:password, :password_confirmation)
+    password_params = params.require(:password_reset).permit(:password, :password_confirmation)
     
     if @user.update(password_params)
       flash[:success] = 'パスワードを変更しました。'
@@ -42,4 +40,11 @@ class PasswordResetsController < ApplicationController
       render :edit
     end
   end
+
+  private
+
+  def set_user
+    @user = User.find(params[:id])
+  end
+
 end
