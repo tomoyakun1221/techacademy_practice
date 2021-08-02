@@ -1,0 +1,13 @@
+<% provide(:title, "Password-reset") %>
+<h1>パスワード再設定受付フォーム</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_with(scope: :password_resets, url: password_resets_path, local: true) do |f| %>
+      <%= f.label :uid, "職員コード", class: "label-login" %>
+      <%= f.text_field :uid, class: "form-control" %>
+      
+      <%= f.submit "送信", class: "btn btn-block btn-primary btn-login" %>
+    <% end %>
+  </div>
+</div>
