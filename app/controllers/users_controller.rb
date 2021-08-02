@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :set_user, only: [:edit, :update, :destroy]
   
   def index
     @users = User.all
@@ -21,11 +22,9 @@ class UsersController < ApplicationController
   end
   
   def edit
-    @user = User.find(params[:id])
   end
   
   def update
-    @user = User.find(params[:id])
     if @user.update_attributes(user_params)
       flash[:success] = 'ユーザー情報の更新に成功しました。'
       redirect_to root_url
@@ -36,7 +35,6 @@ class UsersController < ApplicationController
   end
   
   # def destroy
-  #   @user = User.find(params[:id])
   #   @user.destroy
   #   flash[:success] = 'ユーザーを削除しました。'
   #   redirect_back(fallback_location: root_path)
@@ -46,5 +44,9 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :uid, :password, :password_confirmation, :role)
+  end
+  
+  def set_user
+    @user = User.find(params[:id])
   end
 end
