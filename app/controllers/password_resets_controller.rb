@@ -30,8 +30,6 @@ class PasswordResetsController < ApplicationController
   end
   
   def update
-    password_params = params.require(:password_reset).permit(:password, :password_confirmation)
-    
     if @user.update(password_params)
       flash[:success] = 'パスワードを変更しました。'
       redirect_to login_path
@@ -45,6 +43,10 @@ class PasswordResetsController < ApplicationController
 
   def set_user
     @user = User.find(params[:id])
+  end
+
+  def password_params
+    params.require(:password_reset).permit(:password, :password_confirmation)
   end
 
 end
