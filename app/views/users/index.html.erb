@@ -12,7 +12,7 @@
             <li><span><%= user.name %></span><%= link_to '削除', user_path(user), method: :delete,
                   data: { confirm: '削除してもよろしいでしょうか？' }, class: "btn btn-primary index_button" %>
             </li>
-            <li>
+            <li class="edit_button">
             <!-- アコーディオン -->
               <div class="panel panel-default">
                 <a href="#collapse<%= user.id %>" data-toggle="collapse" class="btn btn-primary index_button collapsed">編集</a>
