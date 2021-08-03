@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  start_time: 2021-08-02 21:59:10
+  end_time: 2021-08-02 21:59:10
+  comment: MyText
+  application_situation: 1
+
+two:
+  start_time: 2021-08-02 21:59:10
+  end_time: 2021-08-02 21:59:10
+  comment: MyText
+  application_situation: 1
