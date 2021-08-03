@@ -27,7 +27,6 @@ class PasswordResetsController < ApplicationController
       flash.now[:danger] = '職員コードを入力してください。'
       render :new
     end
-    
   end
   
   def update
