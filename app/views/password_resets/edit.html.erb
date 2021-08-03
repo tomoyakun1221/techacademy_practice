@@ -1,10 +1,19 @@
-<% provide(:title, "Edit") %>
+<% provide(:title, "Password-reser") %>
 <% provide(:user_label, "user--edit") %>
-<% provide(:button_text, "更新") %>
-<h1>アカウント情報の更新</h1>
+<h1>パスワード再設定</h1>
 
 <div class="row">
   <div class="col-md-6 col-md-offset-3">
-　　<%= render 'users/form' %>
-　</div>
+    <%= form_with(scope: :password_reset, url: password_reset_path, method: :patch, local: true) do |f| %>    
+      <%= render 'shared/error_messages', object: @user %>
+    
+      <%= f.label :password, 'パスワード', class: "label-login" %>
+      <%= f.password_field :password, class: "form-control" %>
+    
+      <%= f.label :password_confirmation, 'パスワード再入力', class: "label-login" %>
+      <%= f.password_field :password_confirmation, class: "form-control" %>
+      
+      <%= f.submit '変更', class: "btn btn-primary btn-block btn-login" %>
+    <% end %>
+  </div>
 </div>
