@@ -29,15 +29,15 @@ class UsersController < ApplicationController
       redirect_to root_url
     else
       flash.now[:danger] = 'ユーザー情報の更新に失敗しました。'
-      render 'edit'
+      redirect_to users_path
     end
   end
   
-  # def destroy
-  #   @user.destroy
-  #   flash[:success] = 'ユーザーを削除しました。'
-  #   redirect_back(fallback_location: root_path)
-  # end
+  def destroy
+    @user.destroy
+    flash[:success] = 'ユーザーを削除しました。'
+    redirect_back(fallback_location: root_path)
+  end
   
   private
 

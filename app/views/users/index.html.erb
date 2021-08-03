@@ -19,29 +19,30 @@
               </div>
               <div style="padding: 10px; margin-bottom: 10px; border: 0.5px solid #c0c0c0; border-radius: 5px;" id="collapse<%= user.id %>" class="collapse">
                 <%= form_with(model: user, local: true) do |f| %>
+                  <%= render 'shared/error_messages', object: user %>
                 
-                  <%= f.label :name %>
+                  <%= f.label :name, class: "label-#{yield(:class_text)}" %>
                   <%= f.text_field :name, class: "form-control" %>
                 
-                  <%= f.label :職員コード %>
+                  <%= f.label :uid, class: "label-#{yield(:class_text)}" %>
                   <%= f.text_field :uid, class: "form-control" %>
-                  
-                  <%= f.label :password %>
+                
+                  <%= f.label :password, class: "label-#{yield(:class_text)}" %>
                   <%= f.password_field :password, class: "form-control" %>
-                  
-                  <%= f.label :password_confirmation %>
+                
+                  <%= f.label :password_confirmation, class: "label-#{yield(:class_text)}" %>
                   <%= f.password_field :password_confirmation, class: "form-control" %>
                   
-                  <%= f.check_box :role, {}, :superior %>
-                  <%= label_tag '上長', '' %>
-                  <%= f.label :foo, '上長' %>
+                  <%= f.label :一般ユーザー %>
+                  <%= f.radio_button :role, :general %>
                   
-                  <%= f.check_box :role, {}, :admin %>
-                  <%= label_tag '管理者', '' %>
-                  <%= f.label :foo, '管理者' %>
+                  <%= f.label :上長ユーザー %>
+                  <%= f.radio_button :role, :superior %>
                   
-                  <br>
-                  <%= f.submit yield(:button_text), class: "btn btn-primary btn-block" %>
+                  <%= f.label :管理者 %>
+                  <%= f.radio_button :role, :admin %>
+                  
+                  <%= f.submit yield(:button_text), class: "btn btn-primary btn-block btn-#{yield(:class_text)}" %>
                 <% end %>
               </div>
             </li>
