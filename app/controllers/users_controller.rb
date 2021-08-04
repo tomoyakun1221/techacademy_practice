@@ -29,7 +29,8 @@ class UsersController < ApplicationController
       redirect_to root_url
     else
       flash.now[:danger] = 'ユーザー情報の更新に失敗しました。'
-      redirect_back(fallback_location: root_path)
+      @users = User.all
+      render :index
     end
   end
   
