@@ -30,7 +30,7 @@ class UsersController < ApplicationController
     else
       flash.now[:danger] = 'ユーザー情報の更新に失敗しました。'
       @users = User.all
-      render :index
+      render 'index'
     end
   end
   
