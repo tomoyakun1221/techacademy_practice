@@ -52,6 +52,7 @@ class UsersController < ApplicationController
   
   def import
     if params[:file]
+      flash[:success] = 'ファイルを読み込みました'
       User.import(params[:file])
       redirect_to users_url
     else
