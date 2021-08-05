@@ -38,6 +38,22 @@ class UsersController < ApplicationController
     flash[:success] = 'ユーザーを削除しました。'
     redirect_back(fallback_location: root_path)
   end
+
+  def working_employee_list
+    if current_user.admin?
+
+      @users = Array.new
+      working_employee_attendances = Attendance.where(end_time: nil).where.not(start_time: nil)
+      
+      working_employee_attendances.each do |a|
+        @users.push(a.user)
+      end
+
+    else
+      flash[:danger] = "閲覧権限がありません。"
+      redirect_to root_url
+    end
+  end
   
   private
 
