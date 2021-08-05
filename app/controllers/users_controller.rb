@@ -29,13 +29,23 @@ class UsersController < ApplicationController
       redirect_to root_url
     else
       flash.now[:danger] = 'ユーザー情報の更新に失敗しました。'
+      render 'edit'
+    end
+  end
+  
+  def update_index
+    if @user.update_attributes(user_params)
+      flash[:success] = "#{@user.name}の基本情報を更新しました。"
+      redirect_to root_url
+    else
+      flash.now[:danger] = "#{@user.name}の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
       @users = User.all
       render 'index'
     end
   end
   
   def destroy
-    @user.destroy
+    @user.destroys
     flash[:success] = 'ユーザーを削除しました。'
     redirect_back(fallback_location: root_path)
   end
