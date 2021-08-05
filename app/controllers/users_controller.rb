@@ -50,6 +50,11 @@ class UsersController < ApplicationController
     redirect_back(fallback_location: root_path)
   end
   
+  def import
+    User.import(params[:file])
+    redirect_back(fallback_location: root_path)
+  end
+  
   private
 
   def user_params
