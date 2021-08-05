@@ -52,7 +52,7 @@ class UsersController < ApplicationController
   
   def import
     User.import(params[:file])
-    redirect_back(fallback_location: root_path)
+    redirect_to users_url
   end
   
   private
