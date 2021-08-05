@@ -17,9 +17,9 @@
               <div class="panel panel-default">
                 <a href="#collapse<%= user.id %>" data-toggle="collapse" class="btn btn-primary index_button collapsed">編集</a>
               </div>
-              <div style="padding: 10px; margin-bottom: 10px; border: 0.5px solid #c0c0c0; border-radius: 5px;" id="collapse<%= user.id %>" class="collapse">
-                <%= form_with(model: user, local: true) do |f| %>
-                  <%= render 'shared/error_messages', object: user %>
+              <div class="accordion collapse" id="collapse<%= user.id %>">
+                <%= form_with(model: user, url: update_index_user_path(user), local: true, method: :patch) do |f| %>
+                  <%= render 'shared/error_messages', object: f.object %>
                 
                   <%= f.label :name, class: "label-#{yield(:class_text)}" %>
                   <%= f.text_field :name, class: "form-control" %>
