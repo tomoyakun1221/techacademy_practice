@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   
   resources :password_resets, only: [:new, :create, :edit, :update]
   resources :users, only: [:index, :new, :create, :edit, :show, :update, :destroy] do
+    collection {post :import}
     member do
       patch 'update_index'
     end
