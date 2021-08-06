@@ -57,7 +57,7 @@ class UsersController < ApplicationController
       working_employee_attendances = Attendance.where(end_time: nil).where.not(start_time: nil)
       
       working_employee_attendances.each do |wea|
-        @users.push(a.user)
+        @users.push(wea.user)
       end
 
     else
