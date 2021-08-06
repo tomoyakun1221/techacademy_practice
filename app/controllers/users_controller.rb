@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :update, :destroy]
+  before_action :set_user, only: [:edit, :update, :update_index, :destroy]
   
   def index
     @users = User.all
@@ -29,7 +29,18 @@ class UsersController < ApplicationController
       redirect_to root_url
     else
       flash.now[:danger] = 'ユーザー情報の更新に失敗しました。'
-      redirect_to users_path
+      render 'edit'
+    end
+  end
+  
+  def update_index
+    if @user.update_attributes(user_params)
+      flash[:success] = "#{@user.name}の基本情報を更新しました。"
+      redirect_to root_url
+    else
+      flash.now[:danger] = "#{@user.name}の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
+      @users = User.all
+      render 'index'
     end
   end
   
@@ -46,7 +57,7 @@ class UsersController < ApplicationController
       working_employee_attendances = Attendance.where(end_time: nil).where.not(start_time: nil)
       
       working_employee_attendances.each do |wea|
-        @users.push(wea.user)
+        @users.push(a.user)
       end
 
     else
@@ -56,12 +67,12 @@ class UsersController < ApplicationController
   end
   
   def import
-    if params[:file]
-      flash[:success] = 'ファイルを読み込みました'
+    if File.extname(params[:file].original_filename) == ".csv"
+      flash[:success] = 'CSVファイルを読み込みました'
       User.import(params[:file])
       redirect_to users_url
     else
-      flash[:danger] = 'ファイルを選択してください'
+      flash[:danger] = 'CSVファイルを選択してください'
       @users = User.all
       redirect_to users_url
     end
