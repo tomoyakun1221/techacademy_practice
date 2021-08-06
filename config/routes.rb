@@ -11,5 +11,9 @@ Rails.application.routes.draw do
     member do
       patch 'update_index'
     end
+
+    collection do
+      get 'working_employee_list'
+    end
   end
 end

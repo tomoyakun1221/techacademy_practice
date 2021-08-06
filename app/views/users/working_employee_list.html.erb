@@ -6,16 +6,18 @@
       <table class="table table-bordered table-condensed table-striped">
         <thead>
           <tr>
-            <th class="center">社員番号</th>
+            <th class="center">職員コード</th>
             <th class="center">名前</th>
           </tr> 
         </thead>
-          <tbody>
+        <tbody>
+          <% @users.each do |user| %>
             <tr>
-              <td align="center"></td>
-              <td align="center"></td>
+              <td align="center"><%= user.uid %></td>
+              <td align="center"><%= user.name %></td>
             </tr>
-          </tbody>
+          <% end %>
+        </tbody>
       </table>
     </div>
 </div>
