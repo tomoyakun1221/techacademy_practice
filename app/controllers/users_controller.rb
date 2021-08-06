@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :update, :update_index, :destroy]
+  before_action :set_user, only: [:edit, :update, :destroy]
   
   def index
     @users = User.all
@@ -29,23 +29,12 @@ class UsersController < ApplicationController
       redirect_to root_url
     else
       flash.now[:danger] = 'ユーザー情報の更新に失敗しました。'
-      render 'edit'
-    end
-  end
-  
-  def update_index
-    if @user.update_attributes(user_params)
-      flash[:success] = "#{@user.name}の基本情報を更新しました。"
-      redirect_to root_url
-    else
-      flash.now[:danger] = "#{@user.name}の更新は失敗しました。<br>" + @user.errors.full_messages.join("<br>")
-      @users = User.all
-      render 'index'
+      redirect_to users_path
     end
   end
   
   def destroy
-    @user.destroys
+    @user.destroy
     flash[:success] = 'ユーザーを削除しました。'
     redirect_back(fallback_location: root_path)
   end
@@ -56,8 +45,8 @@ class UsersController < ApplicationController
       @users = Array.new
       working_employee_attendances = Attendance.where(end_time: nil).where.not(start_time: nil)
       
-      working_employee_attendances.each do |a|
-        @users.push(a.user)
+      working_employee_attendances.each do |wea|
+        @users.push(wea.user)
       end
 
     else
