@@ -50,6 +50,18 @@ class UsersController < ApplicationController
     redirect_back(fallback_location: root_path)
   end
   
+  def import
+    if File.extname(params[:file].original_filename) == ".csv"
+      flash[:success] = 'CSVファイルを読み込みました'
+      User.import(params[:file])
+      redirect_to users_url
+    else
+      flash[:danger] = 'CSVファイルを選択してください'
+      @users = User.all
+      redirect_to users_url
+    end
+  end
+  
   private
 
   def user_params

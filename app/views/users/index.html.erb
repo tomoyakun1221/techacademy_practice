@@ -3,6 +3,12 @@
 
 <div class="container">
     <h1>ユーザ一覧</h1>
+    <div class="col-md-10 col-md-offset-1">
+      <%= form_tag import_users_path(format: :csv), multipart: true do %>
+        <%= file_field_tag :file, class: "btn btn-default" %>
+        <%= submit_tag "CSVをインポート", class: "btn btn-md btn-primary btn-width" %>
+      <% end %>
+    </div>
     <div class="col-md-10 col-md-offset-1"></div>
 
     <div class="col-md-10 col-md-offset-1">
