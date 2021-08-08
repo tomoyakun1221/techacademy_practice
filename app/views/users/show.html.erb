@@ -5,7 +5,7 @@
       <td>
         <% if current_user?(@user) %>
           <br><%= link_to "←", "#", class: "btn btn-sm btn-primary" %>
-          <span class="align-middle"><%= @year_name.to_s + "年" + @month_name.to_s + "月"%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
+          <span class="align-middle"><%=  %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
           <span class="align-top"><%= link_to "→", "#", class: "btn btn-sm btn-primary" %></span>
         <% else %>
           <span class="align-middle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
