@@ -5,7 +5,7 @@
       <td>
         <% if current_user?(@user) %>
           <br><%= link_to "←", "#", class: "btn btn-sm btn-primary" %>
-          <span class="align-middle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
+          <span class="align-middle"><%= @year_name.to_s + "年" + @month_name.to_s + "月"%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
           <span class="align-top"><%= link_to "→", "#", class: "btn btn-sm btn-primary" %></span>
         <% else %>
           <span class="align-middle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
@@ -42,6 +42,7 @@
 </div>
 
 <div>
+  <%= form_with(model: @user, url: register_start_time_user_path(day: @first_day), local: true) do |f| %>
   <table class="table table-bordered table-condensed table-striped" id="table-attendances">
     <thead>
       <tr>
@@ -74,6 +75,15 @@
     </thead>
 
     <tbody>
+      <%= f.fields_for :attendances do |r| %>
+            <% css_class = 
+              case $days_of_the_week[r.date.wday]
+                when '土'
+                  'text-primary'
+                when '日'
+                  'text-danger'
+                end
+                %>
         <tr>
           <td>
             <!-- attendances_overtime_application_info_user_pathにdayを渡さないと、１ヶ月分の情報を残業申請情報に渡すことができない。@userで指定しないとどのユーザーの申請かわからない -->
@@ -95,6 +105,7 @@
           <td></td>
           <td></td>
         </tr>
+        <% end %>
     </tbody>
     
     <tfoot>
@@ -119,6 +130,7 @@
       </tr>
     </tfoot>
   </table>
+  <% end %>
 </div>
 
 <!-- モーダルウィンドウ表示 -->

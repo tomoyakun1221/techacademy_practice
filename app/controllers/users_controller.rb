@@ -20,7 +20,21 @@ class UsersController < ApplicationController
     end
   end
   
-  def edit
+  def show
+    require "date"
+    @first_day = Date.current.beginning_of_month
+    @last_day = @first_day.end_of_month
+    one_month = [@first_day..@last_day]
+    attendance_dates = @user.attendances.where(date: one_month).pluck(:date)
+
+    # 出社のない日があれば、表示用に空データを作成
+    one_month.each do |day|
+      next if attendance_dates.include?(day)
+      @user.attendances.build(date: day)
+    end
+
+    # 日付順に並び替える
+    @user.attendances.sort_by(&:date)
   end
   
   def update
@@ -75,6 +89,17 @@ class UsersController < ApplicationController
       flash[:danger] = 'CSVファイルを選択してください'
       @users = User.all
       redirect_to users_url
+    end
+  end
+  
+  def register_start_time
+    @attendance = current_user.attendances.build
+    if @walkcourse.save
+      flash[:success] = '時刻が登録されました。'
+      redirect_to user_path(@user)
+    else
+      flash.now[:danger] = '時刻の登録に失敗しました。'
+      render 'show'
     end
   end
   
