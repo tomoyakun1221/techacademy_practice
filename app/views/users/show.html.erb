@@ -42,7 +42,6 @@
 </div>
 
 <div>
-  <%= form_with(model: @user, url: register_start_time_user_path(day: @first_day), local: true) do |f| %>
   <table class="table table-bordered table-condensed table-striped" id="table-attendances">
     <thead>
       <tr>
@@ -76,6 +75,14 @@
 
     <tbody>
       <%= @attendances.each do |attendance| %>
+      <% css_class = 
+              case $days_of_the_week[attendance.date.wday]
+                when '土'
+                  'text-primary'
+                when '日'
+                  'text-danger'
+                end
+                %>
         <tr>
           <td>
             <!-- attendances_overtime_application_info_user_pathにdayを渡さないと、１ヶ月分の情報を残業申請情報に渡すことができない。@userで指定しないとどのユーザーの申請かわからない -->
@@ -83,7 +90,9 @@
           </td>
           <td><%= attendance.date.month.to_s + "/" + attendance.date.day.to_s %></td>
           <td><%= $days_of_the_week[attendance.date.wday] %></td>
-          <td></td>
+          <% if attendance.date == Date.today %>
+          <td><%= button_to "出社", { :action => "create", :start_time => Time.now }, name:"attendance", class: "btn btn-md btn-primary"%></td>
+          <% end %>
           <td></td>
           <td></td>
           <td></td>
@@ -122,7 +131,6 @@
       </tr>
     </tfoot>
   </table>
-  <% end %>
 </div>
 
 <!-- モーダルウィンドウ表示 -->
