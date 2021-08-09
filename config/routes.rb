@@ -10,7 +10,6 @@ Rails.application.routes.draw do
     collection {post :import}
     member do
       patch 'update_index'
-      post 'register_start_time'
     end
 
     collection do
