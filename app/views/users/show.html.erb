@@ -90,14 +90,16 @@
           </td>
           <td><%= attendance.date.month.to_s + "/" + attendance.date.day.to_s %></td>
           <td><%= $days_of_the_week[attendance.date.wday] %></td>
-          <% if attendance.date == Date.today %>
+          <td></td>
+          <td></td>
+          <% if attendance.date == Date.today && attendance.start_time == nil%>
           <td><%= button_to "出社", { :action => "create", :start_time => Time.now }, name:"attendance", class: "btn btn-md btn-primary"%></td>
           <% end %>
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <% if attendance.date == Date.today && attendance.end_time != nil %>
+          <td><%= button_to "出社", { :action => "create", :end_time => Time.now }, name:"attendance", class: "btn btn-md btn-primary"%></td>
+          <% end %>
           <td></td>
           <td></td>
           <td></td>
