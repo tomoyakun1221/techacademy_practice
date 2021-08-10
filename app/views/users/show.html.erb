@@ -5,7 +5,7 @@
       <td>
         <% if current_user?(@user) %>
           <br><%= link_to "←", "#", class: "btn btn-sm btn-primary" %>
-          <span class="align-middle"><%=  %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
+          <span class="align-middle"><%= %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
           <span class="align-top"><%= link_to "→", "#", class: "btn btn-sm btn-primary" %></span>
         <% else %>
           <span class="align-middle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
@@ -90,18 +90,31 @@
           </td>
           <td><%= attendance.date.month.to_s + "/" + attendance.date.day.to_s %></td>
           <td><%= $days_of_the_week[attendance.date.wday] %></td>
-          <td></td>
-          <td></td>
+          
+          <% if attendance.start_time %>
+          <td><%= attendance.start_time.hour %></td>
+          <td><%= attendance.start_time.min %></td>
+          <% end %>
+
           <% if attendance.date == Date.today && attendance.start_time == nil%>
-          <td><%= button_to "出社", { :action => "create", :controller => attendance , :start_time => Time.now }, name:"attendance", class: "btn btn-md btn-primary"%></td>
+          <td><%= link_to "出社",user_attendance_path(@user, attendance), method: :patch, class: "btn btn-primary" %></td>
           <% end %>
+          
           <td></td>
-          <td></td>
-          <% if attendance.date == Date.today && attendance.end_time != nil %>
-          <td><%= button_to "退社", { :action => "create", :end_time => Time.now }, name:"attendance", class: "btn btn-md btn-primary"%></td>
+          <% if attendance.end_time %>
+          <td><%= attendance.end_time.hour %></td>
+          <td><%= attendance.end_time.min %></td>
           <% end %>
-          <td></td>
-          <td></td>
+          
+          <% if attendance.date == Date.today && attendance.start_time != nil && attendance.end_time == nil %>
+          <td><%= link_to "退社",user_attendance_path(@user, attendance), method: :patch, class: "btn btn-primary" %></td></td>
+          <% end %>
+          
+          <% if attendance.start_time != nil && attendance.end_time != nil %>
+
+          <td><%= attendance.end_time.hour - attendance.start_time.hour %></td>
+          <% end %>
+          
           <td></td>
           <td></td>
           <td></td>
