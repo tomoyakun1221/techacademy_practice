@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :update, :update_index, :destroy, :show]
-  before_action :set_one_month
+  before_action :set_one_month, only: [:show]
   
   def index
     @users = User.all
