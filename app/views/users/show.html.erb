@@ -111,8 +111,7 @@
           <% end %>
           
           <% if attendance.start_time != nil && attendance.end_time != nil %>
-
-          <td><%= attendance.end_time.hour - attendance.start_time.hour %></td>
+          <td><%= attendance.end_time - attendance.start_time %></td>
           <% end %>
           
           <td></td>
