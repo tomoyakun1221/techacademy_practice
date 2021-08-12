@@ -85,7 +85,7 @@
             <% if attendance.date.wday == 6 %>
               <font color=“Blue”><%= $days_of_the_week[attendance.date.wday] %></font>
             <% elsif attendance.date.wday == 0  %>
-              <font color="#ff0000"><%= $days_of_the_week[attendance.date.wday] %></font>
+              <font color="Red"><%= $days_of_the_week[attendance.date.wday] %></font>
             <% else %>
               <%= $days_of_the_week[attendance.date.wday] %>
             <% end %>
@@ -116,7 +116,7 @@
           <% end %>
           
           <% if attendance.start_time != nil && attendance.end_time != nil %>
-          <td><%= worked_time(attendance.start_time, attendance.end_time) %></td>
+          <td><%= worked_time(attendance.start_time.floor_to(15.minutes), attendance.end_time.floor_to(15.minutes)) %></td>
           <% end %>
           
           <td></td>
