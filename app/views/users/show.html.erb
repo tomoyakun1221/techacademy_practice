@@ -104,6 +104,9 @@
           <% if attendance.end_time %>
           <td><%= attendance.end_time.hour %></td>
           <td><%= attendance.end_time.min %></td>
+          <% else %>
+          <td></td>
+          <td></td>
           <% end %>
           
           <% if attendance.date == Date.today && attendance.start_time != nil && attendance.end_time == nil %>
