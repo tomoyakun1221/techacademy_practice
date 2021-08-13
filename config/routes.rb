@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   delete 'logout', to: 'session#destroy'
   
   resources :password_resets, only: [:new, :create, :edit, :update]
+  
   resources :users, only: [:index, :new, :create, :edit, :show, :update, :destroy] do
+    resources :attendances
     collection {post :import}
     member do
       patch 'update_index'

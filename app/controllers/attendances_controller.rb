@@ -1,9 +1,7 @@
 class AttendancesController < ApplicationController
-  
   def update
     @user = User.find(params[:user_id])
     @attendance = Attendance.find(params[:id])
-    @work_time = @attendance.start_time - @attendance.end_time
     
     if @attendance.start_time.nil?
       if @attendance.update_attributes(start_time: Time.current.change(sec: 0))

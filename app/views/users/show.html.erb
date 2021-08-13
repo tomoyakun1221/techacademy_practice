@@ -4,27 +4,16 @@
       <td>
         <% if current_user?(@user) %>
           <br><%= link_to "←", "#", class: "btn btn-sm btn-primary" %>
-          <span class="align-middle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
+          <span class="align-middle"><%= Date.today.year.to_s + "年" + Date.today.month.to_s + "月" %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
           <span class="align-top"><%= link_to "→", "#", class: "btn btn-sm btn-primary" %></span>
         <% else %>
           <span class="align-middle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
         <% end %>
       </td>
-      <td><br>
-        指定勤務開始時間&nbsp;&nbsp;&nbsp;<br>
-        指定勤務終了時間&nbsp;&nbsp;&nbsp;
-      </td>
-      <td colspan="3"><br>基本時間&nbsp;&nbsp;&nbsp;</td>
-      <td><br>初日&nbsp;&nbsp;&nbsp;</td>
     </tr>
 
     <tr>
-      <td>所属&nbsp;&nbsp;&nbsp;</td>
-      <td>氏名&nbsp;&nbsp;&nbsp;</td>
-      <td>コード</td>
-      <td></td>
-      <td>出勤日数&nbsp;&nbsp;&nbsp;日</td>
-      <td>締め&nbsp;&nbsp;&nbsp;</td>
+      <td>氏名&nbsp;&nbsp;&nbsp;<%= @user.name %></td>
     </tr>
   </table>
 </div>
@@ -32,12 +21,6 @@
 
 <div style="display: inline-flex">
   <%= link_to "勤怠を編集", "#", class: "btn btn-md btn-primary" %>
-
-  <%= link_to "CSV出力", "#", class: "btn btn-md btn-primary" %>
-</div>
-
-<div>
-  <%= link_to "勤怠修正ログ(承認済)", "#", class: "btn btn-md btn-primary" %>
 </div>
 
 <div>
@@ -47,17 +30,12 @@
         <th rowspan="3">残業申請</th>
         <th rowspan="3">日付</th>
         <th rowspan="3">曜日</th>
-        <th colspan="8">【実績】</th>
-        <th colspan="8">所定外勤務</th>
+        <th colspan="7">【実績】</th>
       </tr>
       <tr>
         <td colspan="3">出社</td>
         <td colspan="3">退社</td>
         <td rowspan="2">在社時間</td>
-        <td rowspan="2">備考</td>
-        <td colspan="2">終了予定時間</td>
-        <td rowspan="2">時間外時間</td>
-        <td rowspan="2">業務処理内容</td>
         <td rowspan="2">指示者確認㊞</td>
       </tr>
       <tr>
@@ -67,54 +45,72 @@
         <td>時</td>
         <td>分</td>
         <td></td>
-        <td>時</td>
-        <td>分</td>
       </tr>
     </thead>
 
     <tbody>
+      <% @attendances.each do |attendance| %>
         <tr>
           <td>
             <!-- attendances_overtime_application_info_user_pathにdayを渡さないと、１ヶ月分の情報を残業申請情報に渡すことができない。@userで指定しないとどのユーザーの申請かわからない -->
             <%= link_to "残業申請", "#", remote: true, class: "btn btn-md btn-primary" %>
           </td>
+          <td><%= attendance.date.month.to_s + "/" + attendance.date.day.to_s %></td>
+          <td>
+            <% if attendance.date.wday == 6 %>
+              <font color=“Blue”><%= $days_of_the_week[attendance.date.wday] %></font>
+            <% elsif attendance.date.wday == 0  %>
+              <font color="Red"><%= $days_of_the_week[attendance.date.wday] %></font>
+            <% else %>
+              <%= $days_of_the_week[attendance.date.wday] %>
+            <% end %>
+          </td>
+          
+          <% if attendance.start_time %>
+            <td><%= attendance.start_time.hour %></td>
+            <td><%= attendance.start_time.min %></td>
+          <% else %>
+            <td></td>
+            <td></td>
+          <% end %>
+
+          <% if attendance.date == Date.today && attendance.start_time == nil%>
+            <td><%= link_to "出社",user_attendance_path(@user, attendance), method: :patch, class: "btn btn-primary" %></td>
+          <% end %>
+          
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <% if attendance.end_time %>
+            <td><%= attendance.end_time.hour %></td>
+            <td><%= attendance.end_time.min %></td>
+          <% else %>
+            <td></td>
+            <td></td>
+          <% end %>
+          
+          
+          <% if attendance.date == Date.today && attendance.start_time != nil && attendance.end_time == nil %>
+            <td><%= link_to "退社",user_attendance_path(@user, attendance), method: :patch, class: "btn btn-primary" %></td>
+          <% else %>
+           <td></td>
+          <% end %>
+          
+          <% if attendance.start_time != nil && attendance.end_time != nil %>
+           <td><%= worked_time(attendance.start_time.floor_to(15.minutes), attendance.end_time.floor_to(15.minutes)) %></td>
+          <% end %>
+          
           <td></td>
           <td></td>
         </tr>
+      <% end %>
     </tbody>
     
     <tfoot>
       <tr>
         <th colspan="2">累計日数</th>
-        <th colspan="6">総合勤務時間</th>
-        <th>累計在社時間</th>
-        <th></th>
-        <th colspan="5"></th>
-        <td rowspan = "2">
-          <div class="btn-group">
-            <label>所属長承認&nbsp;&nbsp;&nbsp;</label>
-          </div>
+        <th colspan="2">総合勤務時間</th>
+        <td rowspan = "1">
+          <label>所属長承認&nbsp;&nbsp;&nbsp;</label>
         </td>
-      </tr>
-      <tr>
-        <td colspan="2"></td>
-        <td colspan="6"></td>
-        <td></td>
-        <td></td>
-        <td colspan="5"></td>
       </tr>
     </tfoot>
   </table>
