@@ -1,5 +1,13 @@
 <% provide(:title, @user.name) %>
 <div>
+  <% if @user.superior? %>
+    <% if @overtime_applications.count > 0 %>
+      <%= link_to "【残業申請のお知らせ】", overtime_approvals_overtime_application_notice_user_attendances_path(@user), remote: true, class: "btn notice" %>
+      <span class="application-notice"> <%= @overtime_applications.count %>件の通知があります</span>
+    <% else %>
+      <%= link_to "【残業申請のお知らせ】", overtime_approvals_overtime_application_notice_user_attendances_path(@user), remote: true, class: "btn disabled" %>
+    <% end %>
+  <% end %>
   <table class="table table-bordered table-condensed user-table">
     <tr>
       <td>
@@ -74,27 +82,53 @@
     </thead>
 
     <tbody>
+      <% @attendances.each do |attendance| %>
+        <% overtime_approval = attendance.overtime_approval %>
         <tr>
           <td>
             <!-- attendances_overtime_application_info_user_pathにdayを渡さないと、１ヶ月分の情報を残業申請情報に渡すことができない。@userで指定しないとどのユーザーの申請かわからない -->
-            <%= link_to "残業申請", "#", remote: true, class: "btn btn-md btn-primary" %>
+            <%= link_to "残業申請", new_user_attendance_overtime_approval_path(@user, attendance), remote: true, class: "btn btn-md btn-primary" %>
           </td>
+          <td><%= attendance.date.month.to_s + "/" + attendance.date.day.to_s %></td>
+          <td><%= $days_of_the_week[attendance.date.wday] %></td>
+          <td><%= attendance.start_time ? attendance.start_time.hour : nil %></td>
+          <td><%= attendance.start_time ? attendance.start_time.min : nil %></td>
+          <td></td>
+          <td><%= attendance.end_time ? attendance.end_time.hour : nil %></td>
+          <td><%= attendance.end_time ? attendance.end_time.min : nil %></td>
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td><%= overtime_approval.end_time.hour ? overtime_approval.end_time.hour : nil if overtime_approval %></td>
+          <td><%= overtime_approval.end_time.min ? overtime_approval.end_time.min : nil if overtime_approval %></td>
+          <td>
+            <% if overtime_approval %>
+              <% if overtime_approval.nextday_flag %>
+                <% overtime = overtime_approval.end_time + 60*60*24 - 60*60*18 %>
+                <%= overtime.hour.to_s + ":" + overtime.min.to_s %>
+              <% else %>
+                <% overtime = overtime_approval.end_time - 60*60*18 %>
+                <%= overtime.hour.to_s + ":" + overtime.min.to_s %>
+              <% end %> 
+            <% end %>
+          </td>
+          <td><%= overtime_approval.comment ? overtime_approval.comment : nil if overtime_approval %></td>
+          <td>
+            <% if overtime_approval %>
+              <% if overtime_approval.application_situation && overtime_approval.superior_id %>
+                <% superior_name = User.find(overtime_approval.superior_id).name %>
+                <% if overtime_approval.application? %>
+                  <%= "残業申請：" + superior_name + "へ申請中" %>
+                <% elsif overtime_approval.approval? %>
+                  <%= "残業申請：" + superior_name + "が承認済" %>
+                <% else %>
+                  <%= "残業申請：" + superior_name + "が否認" %>
+                <% end %>
+              <% end %>  
+            <% end %>
+          </td>
         </tr>
+      <% end %>
     </tbody>
     
     <tfoot>

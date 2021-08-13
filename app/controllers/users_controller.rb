@@ -1,8 +1,28 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :update, :update_index, :destroy]
+  before_action :set_user, only: [:edit, :update, :update_index, :destroym, :show]
   
   def index
     @users = User.all
+  end
+
+  def show
+    unless current_user?(@user)
+      redirect_back_or(root_url)
+    else
+      set_one_month
+      if @user.superior?
+        @overtime_applications = OvertimeApproval.where(superior_id: @user.id, application_situation: "application")
+      end
+    end
+  end
+
+  def show_only
+    if current_user.superior?
+      @user = User.find(params[:id])
+      set_one_month
+    else
+      redirect_back_or(root_url)
+    end
   end
   
   def new
@@ -76,6 +96,13 @@ class UsersController < ApplicationController
       @users = User.all
       redirect_to users_url
     end
+  end
+
+  def overtime_application_info
+    # 残業シンセーフォームに渡すデータが必要。dateによってapplobalsを探し、あればそのまま渡し、なければnewする。
+    day = params[:attendance]
+    @overtime_approval = attendance.overtime_approval.find_or_initialize_by(attendance_id: attendance.id)
+    render 'attendances/overtime_application_info'
   end
   
   private

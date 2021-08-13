@@ -8,37 +8,39 @@
     </div>
     <div class="modal-body">
       <h3 class="modal-title text-center">【残業申請】</h3>
-        <table class="table table-bordered table-striped table-condensed">
-          <thead>
-            <tr>
-              <th class="text-center">日付</th>
-              <th class="text-center">曜日</th>
-              <th class="text-center">終了予定時間</th>
-              <th class="text-center">翌日</th>
-              <th class="text-center">業務処理内容</th>
-              <th class="text-center">指示者確認㊞</th>
-            </tr>
-          </thead>
+        <%= form_with(model: [@user, @attendance, @overtime_approval], local: true) do |f| %>
+          <table class="table table-bordered table-striped table-condensed">
+            <thead>
+              <tr>
+                <th class="text-center">日付</th>
+                <th class="text-center">曜日</th>
+                <th class="text-center">終了予定時間</th>
+                <th class="text-center">翌日</th>
+                <th class="text-center">業務処理内容</th>
+                <th class="text-center">指示者確認㊞</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            <tr>
-              <!-- 日付 -->
-              <!--hidden_fieldで日付を持たせて、コントローラーで使わないと、月初の情報を取得できない -->
-              <td class="text-center"></td>
-              <!-- 曜日 -->
-              <td class="text-center"></td>
-              <!-- 終了予定時間 -->
-              <td class="text-center">
-              <!-- 翌日 -->
-              <td class="text-center"></td>
-              <!-- 業務処理内容 -->
-              <td class="text-center"></td>
-              <!-- 指示者確認印 -->
-              <td class="text-center"></td>
-            </tr>
-          </tbody>
-        </table>
-      <% end %>
+            <tbody>
+              <tr>
+                <!-- 日付 -->
+                <!--hidden_fieldで日付を持たせて、コントローラーで使わないと、月初の情報を取得できない -->
+                <td class="text-center"><%= @attendance.date.month.to_s + "/" + @attendance.date.day.to_s %></td>
+                <!-- 曜日 -->
+                <td class="text-center"><%= $days_of_the_week[@attendance.date.wday] %></td>
+                <!-- 終了予定時間 -->
+                <td class="text-center"><%= f.time_select :end_time %></td>
+                <!-- 翌日 -->
+                <td class="text-center"><%= f.check_box :nextday_flag %></td>
+                <!-- 業務処理内容 -->
+                <td class="text-center"><%= f.text_field :comment %></td>
+                <!-- 指示者確認印 -->
+                <td class="text-center"><%= f.select :superior_id, @superiors, include_blank: '選択してください' %></td>
+              </tr>
+            </tbody>
+          </table>
+          <%= f.submit "残業を申請する", class: 'btn btn-primary btn-block' %>
+        <% end %>
     </div>
   </div>
 </div>  
