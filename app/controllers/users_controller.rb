@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :update, :update_index, :destroy]
+  before_action :set_user, only: [:edit, :update, :update_index, :destroy, :show]
+  before_action :set_one_month, only: [:show]
   
   def index
     @users = User.all
@@ -20,7 +21,8 @@ class UsersController < ApplicationController
     end
   end
   
-  def edit
+  def show
+    
   end
   
   def update
@@ -75,6 +77,17 @@ class UsersController < ApplicationController
       flash[:danger] = 'CSVファイルを選択してください'
       @users = User.all
       redirect_to users_url
+    end
+  end
+  
+  def register_start_time
+    @attendance = current_user.attendances.build
+    if @walkcourse.save
+      flash[:success] = '時刻が登録されました。'
+      redirect_to user_path(@user)
+    else
+      flash.now[:danger] = '時刻の登録に失敗しました。'
+      render 'show'
     end
   end
   
