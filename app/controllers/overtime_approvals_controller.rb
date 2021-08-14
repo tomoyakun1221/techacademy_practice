@@ -52,6 +52,11 @@ class OvertimeApprovalsController < ApplicationController
     @overtime_approval = OvertimeApproval.find(params[:id])
     if approve_or_reject_params[:checked] == "1"
       if @overtime_approval.update(application_situation: approve_or_reject_params[:application_situation].to_i)
+        if @overtime_approval.approval?
+          flash[:success] = "残業を承認しました。"
+        elsif @overtime_approval.rejection?
+          flash[:success] = "残業を否認しました。"
+        end
         redirect_to current_user
       else  
         flash.now[:danger] = "残業申請の更新に失敗しました。"
