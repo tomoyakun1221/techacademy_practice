@@ -1,7 +1,7 @@
 <% provide(:title, @user.name) %>
 <div>
   <% if @user.superior? %>
-    <% if @overtime_applications %>
+    <% if @overtime_applications.count > 0 %>
       <%= link_to "【残業申請のお知らせ】", overtime_approvals_overtime_application_notice_user_attendances_path(@user), remote: true, class: "btn notice" %>
       <span class="application-notice"> <%= @overtime_applications.count %>件の通知があります</span>
     <% else %>
@@ -61,6 +61,8 @@
         <td>時</td>
         <td>分</td>
         <td></td>
+        <td>時</td>
+        <td>分</td>
       </tr>
     </thead>
 

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :update, :update_index, :destroy, :show]
-  before_action :set_one_month, only: [:show]
+  before_action :set_one_month, only: [:show, :show_only]
   
   def index
     @users = User.all
@@ -10,7 +10,6 @@ class UsersController < ApplicationController
     unless current_user?(@user)
       redirect_back_or(root_url)
     else
-      set_one_month
       if @user.superior?
         @overtime_applications = OvertimeApproval.where(superior_id: @user.id, application_situation: "application")
       end
@@ -19,8 +18,7 @@ class UsersController < ApplicationController
 
   def show_only
     if current_user.superior?
-      @user = User.find(params[:id])
-      set_one_month
+      set_user
     else
       redirect_back_or(root_url)
     end
@@ -39,10 +37,6 @@ class UsersController < ApplicationController
       flash.now[:danger] = 'ユーザの登録に失敗しました。'
       render 'new'
     end
-  end
-  
-  def show
-    
   end
   
   def update
