@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:edit, :update, :update_index, :destroym, :show]
+  before_action :set_user, only: [:edit, :update, :update_index, :destroy, :show]
+  before_action :set_one_month, only: [:show]
   
   def index
     @users = User.all
@@ -40,7 +41,8 @@ class UsersController < ApplicationController
     end
   end
   
-  def edit
+  def show
+    
   end
   
   def update
@@ -103,6 +105,17 @@ class UsersController < ApplicationController
     day = params[:attendance]
     @overtime_approval = attendance.overtime_approval.find_or_initialize_by(attendance_id: attendance.id)
     render 'attendances/overtime_application_info'
+  end
+  
+  def register_start_time
+    @attendance = current_user.attendances.build
+    if @walkcourse.save
+      flash[:success] = '時刻が登録されました。'
+      redirect_to user_path(@user)
+    else
+      flash.now[:danger] = '時刻の登録に失敗しました。'
+      render 'show'
+    end
   end
   
   private
