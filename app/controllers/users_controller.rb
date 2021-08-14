@@ -1,9 +1,27 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :update, :update_index, :destroy, :show]
-  before_action :set_one_month, only: [:show]
+  before_action :set_one_month, only: [:show, :show_only]
   
   def index
     @users = User.all
+  end
+
+  def show
+    unless current_user?(@user)
+      redirect_back_or(root_url)
+    else
+      if @user.superior?
+        @overtime_applications = OvertimeApproval.where(superior_id: @user.id, application_situation: "application")
+      end
+    end
+  end
+
+  def show_only
+    if current_user.superior?
+      set_user
+    else
+      redirect_back_or(root_url)
+    end
   end
   
   def new
@@ -19,10 +37,6 @@ class UsersController < ApplicationController
       flash.now[:danger] = 'ユーザの登録に失敗しました。'
       render 'new'
     end
-  end
-  
-  def show
-    
   end
   
   def update
@@ -78,6 +92,13 @@ class UsersController < ApplicationController
       @users = User.all
       redirect_to users_url
     end
+  end
+
+  def overtime_application_info
+    # 残業シンセーフォームに渡すデータが必要。dateによってapplobalsを探し、あればそのまま渡し、なければnewする。
+    day = params[:attendance]
+    @overtime_approval = attendance.overtime_approval.find_or_initialize_by(attendance_id: attendance.id)
+    render 'attendances/overtime_application_info'
   end
   
   def register_start_time
