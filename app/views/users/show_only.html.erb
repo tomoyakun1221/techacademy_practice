@@ -6,21 +6,6 @@
         <br>
         <span class="align-middle">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;時間管理表&nbsp;&nbsp;&nbsp;</span>
       </td>
-      <td ><br>
-        指定勤務開始時間&nbsp;&nbsp;&nbsp;<br>
-        指定勤務終了時間&nbsp;&nbsp;&nbsp;
-      </td>
-      <td colspan="3"><br>基本時間&nbsp;&nbsp;&nbsp;</td>
-      <td><br>初日&nbsp;&nbsp;&nbsp;</td>
-    </tr>
-
-    <tr>
-      <td>所属&nbsp;&nbsp;&nbsp;</td>
-      <td>氏名&nbsp;&nbsp;&nbsp;</td>
-      <td>コード</td>
-      <td></td>
-      <td>出勤日数&nbsp;&nbsp;&nbsp;日</td>
-      <td>締め&nbsp;&nbsp;&nbsp;</td>
     </tr>
   </table>
 </div>
@@ -63,7 +48,7 @@
         <tr>
           <td>
             <!-- attendances_overtime_application_info_user_pathにdayを渡さないと、１ヶ月分の情報を残業申請情報に渡すことができない。@userで指定しないとどのユーザーの申請かわからない -->
-            <%= link_to "残業申請", new_user_attendance_overtime_approval_path(@user, attendance), remote: true, class: "btn btn-md btn-primary disabled" %>
+            <%= link_to "残業申請", new_user_attendance_overtime_approval_path(@user, attendance), remote: true, class: "btn btn-md btn-primary" %>
           </td>
           <td><%= attendance.date.month.to_s + "/" + attendance.date.day.to_s %></td>
           <td><%= $days_of_the_week[attendance.date.wday] %></td>
@@ -106,27 +91,5 @@
         </tr>
       <% end %>
     </tbody>
-    
-    <tfoot>
-      <tr>
-        <th colspan="2"></th>
-        <th colspan="6"></th>
-        <th>累計在社時間</th>
-        <th></th>
-        <th colspan="5"></th>
-        <td rowspan = "2">
-          <div class="btn-group">
-            <label>所属長承認&nbsp;&nbsp;&nbsp;</label>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2"></td>
-        <td colspan="6"></td>
-        <td></td>
-        <td></td>
-        <td colspan="5"></td>
-      </tr>
-    </tfoot>
   </table>
 </div>
