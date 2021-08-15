@@ -17,7 +17,7 @@ class OvertimeApprovalsController < ApplicationController
   end
 
   def create
-    # @overtime_approval = Attendance.find(params[:attendance_id]).overtime_approval
+    @overtime_approval = Attendance.find(params[:attendance_id]).overtime_approval
     @user = User.find(params[:user_id])
     if Attendance.find(params[:attendance_id]).create_overtime_approval(overtime_approval_params)
       flash[:info] = "翌日（24:00以降）まで勤務されているにも関わらず、「翌日」にチェックが入っていなかった場合、再度ご確認ください。"
@@ -68,6 +68,7 @@ class OvertimeApprovalsController < ApplicationController
   end
 
   private
+
   def overtime_approval_params
     params[:overtime_approval][:user_id] = params[:user_id]
     if params[:overtime_approval][:superior_id]

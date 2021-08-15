@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210811121837) do
+ActiveRecord::Schema.define(version: 20210815060238) do
 
   create_table "attendances", force: :cascade do |t|
     t.integer "user_id"
     t.date "date"
     t.time "start_time"
     t.time "end_time"
+    t.integer "application_situation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_attendances_on_user_id"
@@ -31,7 +32,9 @@ ActiveRecord::Schema.define(version: 20210811121837) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "attendance_id"
+    t.integer "superior_id"
     t.index ["attendance_id"], name: "index_change_approvals_on_attendance_id"
+    t.index ["superior_id"], name: "index_change_approvals_on_superior_id"
     t.index ["user_id"], name: "index_change_approvals_on_user_id"
   end
 

@@ -16,6 +16,7 @@ class UsersController < ApplicationController
     else
       if @user.superior?
         @overtime_applications = OvertimeApproval.where(superior_id: @user.id, application_situation: "application")
+        @change_applications = ChangeApproval.where(superior_id: @user.id, application_situation: "application")
       end
     end
   end
@@ -124,5 +125,14 @@ class UsersController < ApplicationController
   
   def set_user
     @user = User.find(params[:id])
+  end
+  
+  # 管理権限者、または現在ログインしているユーザーを許可します。
+  def admin_or_correct_user
+    @user = User.find(params[:user_id]) if @user.blank? 
+    unless current_user.admin? || current_user?(@user)
+      flash[:danger] = "編集・操作権限がありません"
+      redirect_to root_url
+    end
   end
 end

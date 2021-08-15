@@ -14,7 +14,6 @@
   <table class="table table-bordered table-condensed table-striped" id="table-attendances">
     <thead>
       <tr>
-        <th rowspan="3">残業申請</th>
         <th rowspan="3">日付</th>
         <th rowspan="3">曜日</th>
         <th colspan="8">【実績】</th>
@@ -46,10 +45,6 @@
       <% @attendances.each do |attendance| %>
         <% overtime_approval = attendance.overtime_approval %>
         <tr>
-          <td>
-            <!-- attendances_overtime_application_info_user_pathにdayを渡さないと、１ヶ月分の情報を残業申請情報に渡すことができない。@userで指定しないとどのユーザーの申請かわからない -->
-            <%= link_to "残業申請", new_user_attendance_overtime_approval_path(@user, attendance), remote: true, class: "btn btn-md btn-primary" %>
-          </td>
           <td><%= attendance.date.month.to_s + "/" + attendance.date.day.to_s %></td>
           <td><%= $days_of_the_week[attendance.date.wday] %></td>
           <td><%= attendance.start_time ? attendance.start_time.hour : nil %></td>
