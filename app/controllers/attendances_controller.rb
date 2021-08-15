@@ -26,7 +26,8 @@ class AttendancesController < ApplicationController
       attendances_params.each do |id, item|
         change_approval = Attendance.find(id).change_approval
         if change_approval.present?
-          change_approval.update_attributes(item)
+          change_approval.update(start_time: item[:start_time], end_time: item[:end_time], application_situation: 0)
+          # change_approval.update_attributes(item)
 
           superiors = User.where.not(id: @user.id).superior
           @superiors = {}
@@ -40,7 +41,7 @@ class AttendancesController < ApplicationController
       redirect_to user_url(@user)
     else
       flash[:danger] = "不正な時間入力がありました。再度ご確認ください。"
-      render :edit_one_month
+      redirect_to user_attendances_edit_one_month_path(@user, params[:date])
     end
   end
    
@@ -70,6 +71,6 @@ class AttendancesController < ApplicationController
   end
 
   def attendances_params
-    params.require(:user).permit(attendances: [:start_time, :end_time, :application_situation, :user_id, :superior_id])[:attendances]
+    params.require(:user).permit(attendances: [:start_time, :end_time, :user_id, :superior_id])[:attendances]
   end
 end

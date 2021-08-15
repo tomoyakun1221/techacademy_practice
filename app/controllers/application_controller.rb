@@ -19,7 +19,11 @@ class ApplicationController < ActionController::Base
     unless one_month.count == @attendances.count # それぞれの件数（日数）が一致するか評価します。
       ActiveRecord::Base.transaction do # トランザクションを開始します。
         # 繰り返し処理により、1ヶ月分の勤怠データを生成します。
-        one_month.each { |day| User.find(params[:id]).attendances.create!(date: day) }
+        if params[:user_id].present?
+          one_month.each { |day| User.find(params[:user_id]).attendances.create!(date: day) }
+        else
+          one_month.each { |day| User.find(params[:id]).attendances.create!(date: day) }
+        end
       end
     end
 

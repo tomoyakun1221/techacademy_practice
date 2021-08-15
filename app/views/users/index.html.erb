@@ -12,6 +12,7 @@
     <div class="col-md-10 col-md-offset-1"></div>
 
     <div class="col-md-10 col-md-offset-1">
+      <%= will_paginate %>
       <% @users.each do |user| %>
         <ul>
             <li></li>
@@ -54,5 +55,6 @@
             </li>
         </ul>
       <% end %>
+      <%= will_paginate %>
     </div>
 </div> 

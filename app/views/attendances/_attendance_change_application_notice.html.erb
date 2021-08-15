@@ -12,7 +12,7 @@
       <% @change_applications.each do |change_application| %>
         <div class="row">
           <%= form_with url: approve_or_reject_user_attendance_change_approval_path(change_application.user.id, change_application.attendance.id, change_application.id), scope: :change_approval, method: :patch, local: true do |f| %>
-            <h1 class="modal-title"><%= "【#{change_application.user.name}からの残業申請】" %></h1>
+            <h1 class="modal-title"><%= "【#{change_application.user.name}からの勤怠変更申請】" %></h1>
             <table class="table table-bordered table-striped table-condensed">
               <thead>
                 <tr>
@@ -34,7 +34,7 @@
                       <!-- 曜日 -->
                       <td class="text-center"><%= $days_of_the_week[change_application.attendance.date.wday] %></td>
                       <!-- 開始予定時間 -->
-                      <td class="text-center"><%= change_application.end_time.hour.to_s + ":" + change_application.end_time.min.to_s %></td>
+                      <td class="text-center"><%= change_application.start_time.hour.to_s + ":" + change_application.start_time.min.to_s %></td>
                       <!-- 終了予定時間 -->
                       <td class="text-center"><%= change_application.end_time.hour.to_s + ":" + change_application.end_time.min.to_s %></td>
                       <!-- 指定勤務終了時間 -->
@@ -43,7 +43,7 @@
                       <td class="text-center"><%= change_application.comment %></td>
                       <!-- 指示者確認㊞ -->
                       <td class="text-center">
-                        <%= f.select :application_situation, {"申請中":0, "承認":1, "否認":2} %>
+                        <%= f.select :application_situation, {"申請中": 0, "承認": 1, "否認": 2} %>
                       </td>
                       <!-- 確認 -->
                       <td class="text-center">
