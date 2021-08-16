@@ -145,7 +145,7 @@
               <% end %>  
             <% end %>
   
-            <% if change_approval.start_time.present? && change_approval.end_time.present? %>
+            <% if change_approval && change_approval.start_time.present? && change_approval.end_time.present? %>
               <% if change_approval.application_situation && change_approval.superior_id %>
                 <% superior_name = User.find(change_approval.superior_id).name %>
                 <% if change_approval.application? %>
