@@ -29,6 +29,16 @@
  <% end %>
 </div>
 
+<% if @user.superior? %>
+  <% if @change_applications.count > 0 %>
+    <%= link_to "【勤怠変更申請のお知らせ】",  change_approvals_attendance_change_application_notice_user_attendances_path(@user), remote: true, class: "btn notice" %>
+    <span class="application-notice"> <%= @change_applications.count %>件の通知があります</span>
+  <% else %>
+    <%= link_to "【勤怠変更申請のお知らせ】", change_approvals_attendance_change_application_notice_user_attendances_path(@user), remote: true, class: "btn disabled" %>
+  <% end %>
+<% end %>
+
+
 <div>
   <%= link_to "勤怠を編集", user_attendances_edit_one_month_path(user_id: @user), class: "btn btn-md btn-primary" %>
 </div>
@@ -71,6 +81,7 @@
       <% @attendances.each do |attendance| %>
         <% overtime_approval = attendance.overtime_approval %>
         <% change_approval = attendance.change_approval %>
+        <% binding.pry %>
         <tr>
           <td>
             <!-- attendances_overtime_application_info_user_pathにdayを渡さないと、１ヶ月分の情報を残業申請情報に渡すことができない。@userで指定しないとどのユーザーの申請かわからない -->
@@ -130,6 +141,19 @@
                   <%= "残業申請：" + superior_name + "が承認済" %>
                 <% else %>
                   <%= "残業申請：" + superior_name + "が否認" %>
+                <% end %>
+              <% end %>  
+            <% end %>
+  
+            <% if change_approval.start_time.present? && change_approval.end_time.present? %>
+              <% if change_approval.application_situation && change_approval.superior_id %>
+                <% superior_name = User.find(change_approval.superior_id).name %>
+                <% if change_approval.application? %>
+                  <%= "勤怠変更申請：" + superior_name + "へ申請中" %>
+                <% elsif change_approval.approval? %>
+                  <%= "勤怠変更申請：" + superior_name + "が承認済" %>
+                <% else %>
+                  <%= "勤怠変更申請：" + superior_name + "が否認" %>
                 <% end %>
               <% end %>  
             <% end %>

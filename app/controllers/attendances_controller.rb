@@ -12,27 +12,26 @@ class AttendancesController < ApplicationController
     superiors.each do |superior|
       @superiors[superior.name] = superior.id
     end
-
-    if @attendance.change_approval
-      @change_approval = @attendance.change_approval
-    else
-      @change_approval = @attendance.build_change_approval(user_id: @user.id)
-    end
-    @change_approval.save!
   end
   
   def update_one_month
     if attendances_invalid?
       attendances_params.each do |id, item|
-        change_approval = Attendance.find(id).change_approval
-        if change_approval.present?
-          change_approval.update(application_situation: 0)
-          change_approval.update_attributes(item)
-
-          superiors = User.where.not(id: @user.id).superior
-          @superiors = {}
-          superiors.each do |superior|
-            @superiors[superior.name] = superior.id
+        attendance = Attendance.find(id)
+        attendance.update_attributes(item)
+        if attendance.change_approval
+          change_approval = attendance.change_approval
+        else
+          change_approval = attendance.build_change_approval(user_id: @user.id)
+          change_approval.save!
+          change_approval.update(start_time: attendance.start_time, end_time: attendance.end_time, application_situation: 0)
+        end
+          
+        superiors = User.where.not(id: @user.id).superior
+        @superiors = {}
+        superiors.each do |superior|
+          @superiors[superior.name] = superior.id
+          if change_approval.present?
             change_approval.update(superior_id: superior.id)
           end
         end

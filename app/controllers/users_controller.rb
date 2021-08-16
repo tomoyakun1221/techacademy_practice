@@ -16,7 +16,9 @@ class UsersController < ApplicationController
     else
       if @user.superior?
         @overtime_applications = OvertimeApproval.where(superior_id: @user.id, application_situation: "application")
-        @change_applications = ChangeApproval.where(superior_id: @user.id, application_situation: "application")
+        @change_applications = ChangeApproval
+                               .where(superior_id: @user.id, application_situation: "application")
+                               .where.not(start_time: nil, end_time: nil)
       end
     end
   end

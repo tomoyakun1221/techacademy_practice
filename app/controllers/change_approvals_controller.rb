@@ -2,7 +2,9 @@ class ChangeApprovalsController < ApplicationController
   
  def attendance_change_application_notice
     @user = User.find(params[:user_id])
-    @change_applications = ChangeApproval.where(superior_id: @user.id, application_situation: 0)
+    @change_applications = ChangeApproval
+                           .where(superior_id: @user.id, application_situation: 0)
+                           .where.not(start_time: nil, end_time: nil)
     render 'attendances/attendance_change_application_notice.js.erb'
  end
   

@@ -10,55 +10,57 @@
     </div>
     <div class="modal-body">
       <% @change_applications.each do |change_application| %>
-        <div class="row">
-          <%= form_with url: approve_or_reject_user_attendance_change_approval_path(change_application.user.id, change_application.attendance.id, change_application.id), scope: :change_approval, method: :patch, local: true do |f| %>
-            <h1 class="modal-title"><%= "【#{change_application.user.name}からの勤怠変更申請】" %></h1>
-            <table class="table table-bordered table-striped table-condensed">
-              <thead>
-                <tr>
-                  <td class="text-center">日付</td>
-                  <td class="text-center">曜日</td>
-                  <td class="text-center">開始予定時間</td>
-                  <td class="text-center">終了予定時間</td>
-                  <td class="text-center">指定勤務終了時間</td>
-                  <td class="text-center">業務処理内容</td>
-                  <td class="text-center">指示者確認㊞</td>
-                  <td class="text-center">変更</td>
-                  <td class="text-center">勤怠を確認する</td>
-                </tr>
-              </thead>
-              <tbody>
-                    <tr>
-                      <!-- 日付 -->
-                      <td class="text-center"><%= change_application.attendance.date.month.to_s + "/" + change_application.attendance.date.day.to_s %></td>
-                      <!-- 曜日 -->
-                      <td class="text-center"><%= $days_of_the_week[change_application.attendance.date.wday] %></td>
-                      <!-- 開始予定時間 -->
-                      <td class="text-center"><%= change_application.start_time.hour.to_s + ":" + change_application.start_time.min.to_s %></td>
-                      <!-- 終了予定時間 -->
-                      <td class="text-center"><%= change_application.end_time.hour.to_s + ":" + change_application.end_time.min.to_s %></td>
-                      <!-- 指定勤務終了時間 -->
-                      <td class="text-center">18:00</td>
-                      <!-- 業務処理内容 -->
-                      <td class="text-center"><%= change_application.comment %></td>
-                      <!-- 指示者確認㊞ -->
-                      <td class="text-center">
-                        <%= f.select :application_situation, {"申請中": 0, "承認": 1, "否認": 2} %>
-                      </td>
-                      <!-- 確認 -->
-                      <td class="text-center">
-                        <%= f.check_box :checked %>
-                      </td>
-                      <!--勤怠を変更する-->
-                      <td class="text-center"><%= link_to "確認", show_only_user_path(change_application.user) , class: 'btn btn-primary' %></td>
-                    </tr>
-              </tbody>
-            </table>
-            <%= f.submit "変更を送信する", class: 'btn btn-primary btn-block' %>
+        <% if change_application.start_time.present? && change_application.end_time.present?%>
+          <div class="row">
+            <%= form_with url: approve_or_reject_user_attendance_change_approval_path(change_application.user.id, change_application.attendance.id, change_application.id), scope: :change_approval, method: :patch, local: true do |f| %>
+              <h1 class="modal-title"><%= "【#{change_application.user.name}からの勤怠変更申請】" %></h1>
+              <table class="table table-bordered table-striped table-condensed">
+                <thead>
+                  <tr>
+                    <td class="text-center">日付</td>
+                    <td class="text-center">曜日</td>
+                    <td class="text-center">開始予定時間</td>
+                    <td class="text-center">終了予定時間</td>
+                    <td class="text-center">指定勤務終了時間</td>
+                    <td class="text-center">業務処理内容</td>
+                    <td class="text-center">指示者確認㊞</td>
+                    <td class="text-center">変更</td>
+                    <td class="text-center">勤怠を確認する</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <!-- 日付 -->
+                    <td class="text-center"><%= change_application.attendance.date.month.to_s + "/" + change_application.attendance.date.day.to_s %></td>
+                    <!-- 曜日 -->
+                    <td class="text-center"><%= $days_of_the_week[change_application.attendance.date.wday] %></td>
+                    <!-- 開始予定時間 -->
+                    <td class="text-center"><%= change_application.start_time.hour.to_s + ":" + change_application.start_time.min.to_s %></td>
+                    <!-- 終了予定時間 -->
+                    <td class="text-center"><%= change_application.end_time.hour.to_s + ":" + change_application.end_time.min.to_s %></td>
+                    <!-- 指定勤務終了時間 -->
+                    <td class="text-center">18:00</td>
+                    <!-- 業務処理内容 -->
+                    <td class="text-center"><%= change_application.comment %></td>
+                    <!-- 指示者確認㊞ -->
+                    <td class="text-center">
+                      <%= f.select :application_situation, {"申請中": 0, "承認": 1, "否認": 2} %>
+                    </td>
+                    <!-- 確認 -->
+                    <td class="text-center">
+                      <%= f.check_box :checked %>
+                    </td>
+                    <!--勤怠を変更する-->
+                    <td class="text-center"><%= link_to "確認", show_only_user_path(change_application.user) , class: 'btn btn-primary' %></td>
+                  </tr>
+                </tbody>
+              </table>
+              <%= f.submit "変更を送信する", class: 'btn btn-primary btn-block' %>
+            <% end %>
+          </div>
           <% end %>
-        </div>
-        <hr>
-      <% end %>
-    </div>
+          <hr>
+        <% end %>
+      </div>
   </div>
 </div>
